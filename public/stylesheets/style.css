@@ -1,0 +1,15 @@
+.button_x {
+    border: 0px;
+    background: transparent;
+    color: #555;
+    width: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+.w2ui-grid .w2ui-grid-body table td.w2ui-grid-data > div {
+	padding: 0px !important;
+}

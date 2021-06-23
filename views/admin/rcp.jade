@@ -1,0 +1,462 @@
+extends layout
+
+block content
+
+    div(style='position: fixed; top: 65px; right: 0px; z-index: 99;')
+        button(class="w2ui-btn w2ui-btn-blue" onclick="$('#save').trigger('click');") 저장
+        br
+        button(class="w2ui-btn mt-1" onclick="formClear();") 리셋
+        
+
+    div(class='row')
+        div(class='col-12 col-md-5 mt-4')
+            div(id='grid' style='width: 100%; height: 730px;')
+
+
+        div(class='col-12 col-md-7 mt-4')
+            div(id='form')
+                div(class='w2ui-page page-0')
+                    div(class='d-flex flex-row')
+                        div(class='w2ui-field w2ui-span2 flex-fill')
+                            label 음식명
+                            div
+                                input(name='TITLE')
+                                
+                        div(class='w2ui-field w2ui-span2 flex-fill')
+                            label 종류별
+                            div
+                                input(name='CATE1')
+                                
+                        div(class='w2ui-field w2ui-span2 flex-fill')
+                            label 상황별
+                            div
+                                input(name='CATE2')
+                    
+                    div(class='d-flex flex-row')
+                        div(class='w2ui-field w2ui-span2 flex-fill')
+                            label 재료별
+                            div
+                                input(name='CATE3')
+                                
+                        div(class='w2ui-field w2ui-span2 flex-fill')
+                            label 방법별
+                            div
+                                input(name='CATE4')
+                                
+                        div(class='w2ui-field w2ui-span2 flex-fill')
+                            label 테마별
+                            div
+                                input(name='CATE5')
+                                
+                    div(class='d-flex flex-row mt-4')
+                        div(class='flex-column flex-fill')
+                            div(class='w2ui-field w2ui-span2')
+                                label 재료
+                                div
+                                    textarea(name='JAELYO', rows='7', style='font-size: 14px;')
+                                    button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
+                                    
+                        div(class='flex-column flex-fill')                    
+                            div(class='w2ui-field w2ui-span2')
+                                label 쿠팡링크
+                                div(class='d-flex flex-column')
+                                    div(class='d-flex flex-row')
+                                        input(name='CP_Q', placeholder='재료를 입력해주세요.')
+                                        button(name='get_cp_link', class='w2ui-btn') 링크생성
+                                    input(name='CP_LINK', class='mt-1')
+                            
+                            div(class='w2ui-field w2ui-span2 mt-3')
+                                label 블로거
+                                div
+                                    input(name='WRITER_IDX')
+
+                    div(class='d-flex flex-row mt-4')
+                        div(class='flex-column flex-fill')
+                            - var title = '';
+                            - for (var i=0;i<=9;i++)
+                                if i == 0
+                                    - title = '대표사진'
+                                else
+                                    - title = '순서' + i
+                                div(class='w2ui-field w2ui-span2')
+                                    label #{title}
+                                    div(class='d-flex flex-row')
+                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                                            label(for='file-input#{i}')
+                                                img(id='FILENAME#{i}_IMG', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                                            img(id='FILENAME#{i}_X', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                                        textarea(name='MEMO#{i}', style='width: 100%; height: 80px;')
+                                    
+                        div(class='flex-column flex-fill')
+                            - for (var i=10;i<=19;i++)
+                                div(class='w2ui-field w2ui-span2')
+                                    label 순서#{i}
+                                    div(class='d-flex flex-row')
+                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                                            label(for='file-input#{i}')
+                                                img(id='FILENAME#{i}_IMG', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                                            img(id='FILENAME#{i}_X', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                                        textarea(name='MEMO#{i}', style='width: 100%; height: 80px;')
+                    
+
+                div(class='w2ui-buttons')
+                    button(class='w2ui-btn' name='reset') 리셋
+                    button(class='w2ui-btn w2ui-btn-blue' name='save' id='save') 입력
+
+
+            form(name="frmPopup", method="post")
+                input(type="hidden", name="JAELYO")
+
+    //- 들여쓰기 중요함
+    script.
+        var cate1 = [];
+        var cate2 = [];
+        var cate3 = [];
+        var cate4 = [];
+        var cate5 = [];
+        var bloger = [];
+        var table = 'RCP_tbl';
+        var config = {
+            grid: {
+                url: {
+                    get: '/crud/list?table=' + table,
+                    remove: '/crud/remove?table=' + table,                    
+                },
+                recid: 'IDX',
+                limit: 20,
+                recordHeight: 40,
+                autoLoad: false,
+                name: 'grid',
+                show: {
+                    selectColumn: true,
+                    footer: true,
+                    toolbar: true,
+                    toolbarDelete: true,
+                },
+                sortData: [{ field: 'IDX', direction: 'DESC' }],
+                multiSelect: true,
+                multiSearch: true,
+                onError:function(e){
+                    console.log(e.xhr.responseText);
+                },
+                onClick: function(event) {
+                    if (event.column == null) {
+                        return;
+                    }
+
+                    var grid = this;
+                    var form = w2ui.form;
+                    event.onComplete = function () {
+                        var sel = grid.getSelection();
+                        if (sel.length == 1) {
+                            form.recid = sel[0];
+                            form.clear();
+                            form.record = $.extend(true, {}, grid.get(sel[0]));
+                            console.log(form.record);
+                                                        
+                            setTimeout(async function() {
+                                await new Promise(function(resolve, reject) {
+                                    getCategorys();
+                                    resolve();
+                                });
+                                $("input[name='CATE1']").w2field().set({ id: form.record.CATE1, text: form.record.CATE1 });
+                                $("input[name='CATE2']").w2field().set({ id: form.record.CATE2, text: form.record.CATE2 });
+                                $("input[name='CATE3']").w2field().set({ id: form.record.CATE3, text: form.record.CATE3 });
+                                $("input[name='CATE4']").w2field().set({ id: form.record.CATE4, text: form.record.CATE4 });
+                                $("input[name='CATE5']").w2field().set({ id: form.record.CATE5, text: form.record.CATE5 });    
+                            }, 300);
+                            
+                            setTimeout(async function() {
+                                var blogerName = '';
+                                await new Promise(function(resolve, reject) {
+                                    blogerName = getBlogers(form.record.WRITER_IDX);
+                                    resolve(blogerName);
+                                }).then(data => {
+                                    blogerName = data;
+                                });                                
+                                $("input[name='WRITER_IDX']").w2field().set({ id: form.record.WRITER_IDX, text: blogerName });
+                            }, 400);
+                            
+                            
+                            for (var i=0;i<=19;i++) {
+        						eval("var fileLink = form.record.FILENAME"+i);
+        						if (fileLink != '') {
+        							$("#FILENAME"+i+"_IMG").attr("src", fileLink);
+        							$("#FILENAME"+i+"_IMG").attr("onclick", "window.open('"+fileLink+"')");
+        							$("#FILENAME"+i+"_X").show();
+        						} else {
+        							$("#FILENAME"+i).val("");
+        							$("#FILENAME"+i+"_IMG").attr("src", "/images/no-img2.png");
+        							$("#FILENAME"+i+"_IMG").attr("onclick", "");
+        							$("#FILENAME"+i+"_X").hide();
+        						}
+        					}
+                            
+                            form.refresh();
+                            $("#save").text("수정");
+                        } else {
+                            formClear();
+                            $("#save").text("입력");
+                        }
+                    }
+                },
+                searches: [
+                    { field: 'TITLE', caption: '제목', type: 'text' },			//세팅 해줘야함
+                    { field: 'NAME1', caption: '작성자', type: 'text' },			//세팅 해줘야함
+                ],
+                columns: [
+                    { field: 'IDX', caption: '번호', size: '50px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
+                    { field: 'FILENAME0', caption: '썸네일', size: '50px', sortable: true, resizable: true, style: 'padding: 0px;',	//세팅 해줘야함
+                        render: function(record) {
+                            if (record.FILENAME0 != null && record.FILENAME0 != '') {
+                                return '<img src="' + record.FILENAME0.split("|")[0] + '" style="width: 50px; height: 40px;" />';
+                            }
+                        }
+                    },
+                    { field: 'TITLE', caption: '제목', size: '100%', min: 250, sortable: true, resizable: true, attr: 'align=left' },	//세팅 해줘야함
+                    { field: 'WDATE', caption: '생성일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
+                        render: function(rec) {
+                            return util_convert_to_millis(rec.WDATE);
+                        }
+                    },
+                    { field: 'LDATE', caption: '수정일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
+                        render: function(rec) {
+                            return util_convert_to_millis(rec.LDATE);
+                        }
+                    },
+                ],
+            },
+            form: {
+                name: 'form',
+                fields: [
+                    { field: 'TITLE', type: 'text', required: true },	//세팅 해줘야함
+                    { field: 'JAELYO', type: 'textarea', required: true },	//세팅 해줘야함
+                    { field: 'WRITER_IDX', type: 'list', required: true },	//세팅 해줘야함
+                    { field: 'CATE1', type: 'list', required: false },   //세팅 해줘야함
+                    { field: 'CATE2', type: 'list', required: false },	//세팅 해줘야함
+                    { field: 'CATE3', type: 'list', required: false },	//세팅 해줘야함
+                    { field: 'CATE4', type: 'list', required: false },	//세팅 해줘야함
+                    { field: 'CATE5', type: 'list', required: false },	//세팅 해줘야함
+                    
+                    { field: 'CP_Q', type: 'text', required: true },	//세팅 해줘야함
+                    { field: 'CP_LINK', type: 'text', required: true },	//세팅 해줘야함
+                    
+                    { field: 'MEMO0', type: 'textarea', required: true },
+                    { field: 'MEMO1', type: 'textarea', required: false },
+                    { field: 'MEMO2', type: 'textarea', required: false },
+                    { field: 'MEMO3', type: 'textarea', required: false },
+                    { field: 'MEMO4', type: 'textarea', required: false },
+                    { field: 'MEMO5', type: 'textarea', required: false },
+                    { field: 'MEMO6', type: 'textarea', required: false },
+                    { field: 'MEMO7', type: 'textarea', required: false },
+                    { field: 'MEMO8', type: 'textarea', required: false },
+                    { field: 'MEMO9', type: 'textarea', required: false },
+                    { field: 'MEMO10', type: 'textarea', required: false },
+                    { field: 'MEMO11', type: 'textarea', required: false },
+                    { field: 'MEMO12', type: 'textarea', required: false },
+                    { field: 'MEMO13', type: 'textarea', required: false },
+                    { field: 'MEMO14', type: 'textarea', required: false },
+                    { field: 'MEMO15', type: 'textarea', required: false },
+                    { field: 'MEMO16', type: 'textarea', required: false },
+                    { field: 'MEMO17', type: 'textarea', required: false },
+                    { field: 'MEMO18', type: 'textarea', required: false },
+                    { field: 'MEMO19', type: 'textarea', required: false },
+                ],
+                actions: {
+                    reset: function () {
+                        formClear();
+                        $("#save").text("입력");
+                    },
+                    save: function () {
+                        var errors = this.validate();
+                        if (errors.length > 0) {
+                            return;
+                        }
+
+                        //- 세팅해줘야함.
+                        this.record.table = table;
+                        this.record.CATE1 = this.record.CATE1['text'];
+                        this.record.CATE2 = this.record.CATE2['text'];
+                        this.record.CATE3 = this.record.CATE3['text'];
+                        this.record.CATE4 = this.record.CATE4['text'];
+                        this.record.CATE5 = this.record.CATE5['text'];
+                        
+                        this.record.WRITER_IDX = this.record.WRITER_IDX['id'];
+                        //
+                        
+                        var formData = new FormData();
+                        var self = this;
+                        for (var key in this.record) {
+                            formData.append(key, self.record[key]);                            
+                        }
+                        
+                        axios.post('/crud/write', formData).then(function(res) {
+                            console.dir(res.data);
+                            $("#save").text("입력");
+                            w2alert(res.data.msg);
+                            if (res.data.code == 1) {
+                                setTimeout(function() {
+                                    w2ui.grid.reload();
+                                    formClear();
+                                }, 300);
+                            } else if (res.data.code == 2) {    //수정
+                                setTimeout(function() {
+                                    w2ui.grid.set(res.data.record.IDX, res.data.record, false);
+                                    formClear();
+                                }, 300);
+                            }
+                            
+                        });
+                    },
+                    check_jaelyo: function() {
+                        var frmPop = document.frmPopup;
+                        var url = '/rcp/check_jaelyo';
+                        window.open('', 'popupView', 'width=400, height=800, menubar=no, status=no, toolbar=no, left=0, top=0');
+
+                        frmPop.action = url;
+                        frmPop.target = 'popupView';
+                        frmPop.JAELYO.value = w2ui.form.record.JAELYO;
+                        frmPop.submit();
+                        
+                    },
+                    get_cp_link: function() {
+                        console.log(w2ui.form.record.CP_Q);
+                        if (w2ui.form.record.CP_Q == null) {
+        					w2alert('재료를 입력해주세요.');
+        					return;
+        				}
+        				var left = (screen.width / 2) - (200 / 2) + window.screenX;
+            			var top = (screen.height / 2) - (100 / 2) + window.screenY;
+        				window.open('https://www.shop247.co.kr/cp2.php?material=' + this.record.CP_Q, 'popupView', 'width=200, height=100, menubar=no, status=no, toolbar=no, left='+left+', top='+top);
+                    },
+                },
+            },
+            onError: function(e) {
+                console.log(e.xhr.responseText);
+            },
+        };
+        
+        
+        
+        $(function () {
+            $('#grid').w2grid(config.grid);
+            $('#form').w2form(config.form);
+            
+            //카테고리 불러오기
+            axios.get('/crud/iterator?table=CATEGORYS_tbl').then(function(res) {                
+                for (obj of res.data) {
+                    if (obj.GBN == 'cate1') {
+                        cate1.push(obj.NAME1);
+                    } else if (obj.GBN == 'cate2') {
+                        cate2.push(obj.NAME1);
+                    } else if (obj.GBN == 'cate3') {
+                        cate3.push(obj.NAME1);
+                    } else if (obj.GBN == 'cate4') {
+                        cate4.push(obj.NAME1);
+                    } else if (obj.GBN == 'cate5') {
+                        cate5.push(obj.NAME1);
+                    }
+                }                
+                getCategorys();
+                                
+            }).catch(function(err){
+                console.log(err);
+            });
+            
+            //블로거 불러오기
+            axios.get('/crud/iterator?table=BLOGER_tbl').then(function(res) {                
+                for (obj of res.data) {
+                    bloger.push({
+                        id: obj.IDX,
+                        text: obj.NAME1
+                    });
+                }                
+                getBlogers();
+                                
+            }).catch(function(err){
+                console.log(err);
+            });
+        });
+        function getCategorys() {
+            $("input[name='CATE1']").w2field('list', { items: cate1 });
+            $("input[name='CATE2']").w2field('list', { items: cate2 });
+            $("input[name='CATE3']").w2field('list', { items: cate3 });
+            $("input[name='CATE4']").w2field('list', { items: cate4 });
+            $("input[name='CATE5']").w2field('list', { items: cate5 });
+        }
+        function getBlogers(id) {
+            $("input[name='WRITER_IDX']").w2field('list', { items: bloger });
+            
+            if (id != null) {
+                for (obj of bloger) {
+                    if (obj.id == id) {
+                        return obj.text;
+                    }
+                }
+            }
+            
+        }
+        function formClear() {
+            setTimeout(function() {
+                getCategorys();
+                getBlogers();
+            }, 200);
+            
+        	$("#JAELYO").val("");
+        	w2ui.form.clear();
+        	for (var i=0;i<=19;i++) {
+        		$("#FILENAME"+i).val("");
+        		$("#FILENAME"+i+"_IMG").attr("src", "/images/no-img2.png");
+        		$("#FILENAME"+i+"_IMG").attr("onclick", "");
+        		$("#FILENAME"+i+"_X").hide();
+        	}
+        	w2ui.form.refresh();
+        }
+                
+        function dragEnter(i, e) {
+            console.log(i, "드래그 요소가 들어왔을떄", e);
+            $("#FILENAME"+i+"_IMG").addClass("bg-dark");
+        }
+        function dragLeave(i, e) {
+            console.log(i, "드래그 요소가 나갔을때");
+        	$("#FILENAME"+i+"_IMG").addClass("img-thumbnail");
+        	$("#FILENAME"+i+"_IMG").removeClass("bg-dark");
+        }
+        function dragOver(e) {
+        	e.stopPropagation();
+            e.preventDefault();
+        }
+        function drop(i, e) {
+            console.log("드래그한 항목을 떨어뜨렸을때", e);
+            e.preventDefault();
+            var file = e.dataTransfer.files[0];
+            var formData = new FormData();
+        	formData.append("upload_file", file, file.name);
+        	axios.post("/crud/file_upload", formData).then(function(res) {
+        		console.dir(res.data);
+                eval("w2ui.form.record.FILENAME"+i+"='"+res.data+"';");
+        		$("#FILENAME"+i+"_IMG").attr("src", res.data);
+        		$("#FILENAME"+i+"_IMG").attr("onclick", "window.open('"+res.data+"')");
+        		$("#FILENAME"+i+"_X").show();
+                $("#FILENAME"+i+"_IMG").show();
+        		$("#FILENAME"+i+"_IMG").addClass("img-thumbnail");
+        		$("#FILENAME"+i+"_IMG").removeClass("bg-dark");
+            }).catch(function(err){
+                console.log(err);
+            });
+        }
+        function deleteImage(i) {
+        	var path = $("#FILENAME"+i+"_IMG").attr("src");
+            console.log(path);
+        	var params = new URLSearchParams();
+        	params.append('filename', path);
+        	axios.post('/crud/file_delete', params).then(function(res) {
+        		console.dir(res.data);
+        		if (res.data.code == 1) {
+        			eval("w2ui.form.record.FILENAME"+i+"='';");
+        			$("#FILENAME"+i+"_IMG").attr("src", "/images/no-img2.png");
+        			$("#FILENAME"+i+"_IMG").attr("onclick", "");
+        			$("#FILENAME"+i+"_X").hide();
+        		}
+        	});
+        }
