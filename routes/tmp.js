@@ -103,19 +103,21 @@ router.get('/', async function(req, res, next) {
 // const keyArr = ['iIoD6euX59A','iA2BaA2d49A','DJ3XOF6P170','fEpH8INBX70','DYyslFJZv70','eXDDJ3O2V70','hLX4uOAuV8A','fZQAaNdst70','eBVmkN1QT70','DBZ2qyHgr70'];
 // const keyArr = ['JRLA5j8TQ8A','F9Y2s2m8o70','DSjtHD2kO70','dRSJbxrSl70','iEdmhmgMk8A','JP1R0yidJ8A','iLPvJkKxh8A','EMwm2YHhG70','FA8v0kIEe70','FLPLtjTod70'];
 // const keyArr = ['F1cMGuatC70','hWieyEabB8A','e3z7y5f3A70','dQodiKPz870','ICeb0v7z88A','H9UP7qKF88A','HUyBoHCLz7A','fPX5L6QNY60','dTVG6repU60','dQk2TjCQs60'];
-// const keyArr = ['kYtlvfhGs7A','DHIowvYjR60','H3HoiZU1m7A','kMkAgun8m6A','EOtpWSLMG50','gBDtnoRha50','IWb5dcTa25A','iTZxxB2lw5A','iKedjnVlw5A','eJXvvAqqV40'];
-// const keyArr = ['hSahrP8At5A','FVAX2rh9T40','GUuturh9T40','DMcnOrh9T40','DVB0l2R8T40','I726gLCUr5A','DMhD6d9qo40','jQ8DbqeTn5A','IVQxJIqcN5A','dAch6fSNl40'];
-// const keyArr = ['IE8ScKlXj5A','JOgh8JyUH5A','k5GmPV6lH5A','F7xlBsvkg40','IFFPgqHAg5A','EAx3iMnBd40','FT1nA2msb40','H5JCMEXsC5A','JVYuvinsb5A','f5ON9I6mB40'];
-// const keyArr = ['FH59wfaCa40','DRAVRWjA740','JUzyEdcN45A','ENKQvBKP230','kZPMLbMpx4A','jHR2eXGbv4A','iIzdEJrQu4A','HHAPMPG9u4A','F1iWmBBUr30','kKh5tKaOS4A'];
-// const keyArr = ['eVZu1yBWP30','jPTdb2nFp4A','K5A6AL0hP4A','fU4uY1ibo30','GAcv8l35M30','hM2DWsjIl4A','KTGUrCtUk4A','jUpky7vwK4A','jRDJc0ZKh4A','f9OyK0P0f30'];
-// const keyArr = ['H12im7YDf4A','dHO6hYnUE30','eROIV6JQ730','jQxhfr1O74A','fMwnGlaf630','FSm1xchy430','e9T74y4w430','gBXuBLFIX29','eRZdHeYBX29','eBDlgKovw29'];
-// const keyArr = ['eDOs0fNkS29','FSo56bp7S29','jAs9wvLaS30','iHPbkkEYr30','JGepQTuQr30','dFO5XgPDq29','dLYwNOnpO29','fMo01iQDO29','f5P8pgJvN29','dTC6PVQLN29'];
-// const keyArr = ['eVNb0hCJm29','GArZ8aucm29','KVQbL3FPM30','jKzWoNfbi30','HG20leRYH30','I14cY76QH30','KElt1MXag30','gGrrsUIKe29','f5UOOU4ha29','jWr30RJ0B30'];
-// const keyArr = ['k10SDEDZa30','fAiwjDgt029','EGgA0uDO029','EDFGdg16429','FK2YHUlw329','eCc3CrxO329','fPVX4jTQ219','eXDBFNJK219','fVGSuLW2y19','h5Kv0zdVu20'];
-// const keyArr = ['fAtKjcwbU19','dNRyAiNbt19','hNUexFE7U20','gVTzEz5yT19','HDNdkglhr20','JSa0zRs5r20','K1qxbQ0UR20','k5LLSXJBq20','I7uudhqzp20','kQhpfdTNp20'];
+// const keyArr = ['eCc3CrxO329','kYtlvfhGs7A','DHIowvYjR60','H3HoiZU1m7A','kMkAgun8m6A','EOtpWSLMG50','gBDtnoRha50','IWb5dcTa25A','iTZxxB2lw5A','iKedjnVlw5A','eJXvvAqqV40'];
+
+// var keyArr = ['I726gLCUr5A','DMhD6d9qo40','jQ8DbqeTn5A','IVQxJIqcN5A','dAch6fSNl40',
+// 'IE8ScKlXj5A','JOgh8JyUH5A','k5GmPV6lH5A','F7xlBsvkg40','IFFPgqHAg5A','EAx3iMnBd40','FT1nA2msb40','H5JCMEXsC5A','JVYuvinsb5A','f5ON9I6mB40',
+// 'FH59wfaCa40','DRAVRWjA740','JUzyEdcN45A','ENKQvBKP230','kZPMLbMpx4A','jHR2eXGbv4A','iIzdEJrQu4A','HHAPMPG9u4A','F1iWmBBUr30','kKh5tKaOS4A',
+// 'eVZu1yBWP30','jPTdb2nFp4A','K5A6AL0hP4A','fU4uY1ibo30','GAcv8l35M30','hM2DWsjIl4A','KTGUrCtUk4A','jUpky7vwK4A','jRDJc0ZKh4A','f9OyK0P0f30',
+// 'H12im7YDf4A','dHO6hYnUE30','eROIV6JQ730','jQxhfr1O74A','fMwnGlaf630','FSm1xchy430','e9T74y4w430','gBXuBLFIX29','eRZdHeYBX29','eBDlgKovw29',
+// 'eDOs0fNkS29','FSo56bp7S29','jAs9wvLaS30','iHPbkkEYr30','JGepQTuQr30','dFO5XgPDq29','dLYwNOnpO29','fMo01iQDO29','f5P8pgJvN29','dTC6PVQLN29',
+// 'eVNb0hCJm29','GArZ8aucm29','KVQbL3FPM30','jKzWoNfbi30','HG20leRYH30','I14cY76QH30','KElt1MXag30','gGrrsUIKe29','f5UOOU4ha29','jWr30RJ0B30',
+// 'k10SDEDZa30','fAiwjDgt029','EGgA0uDO029','EDFGdg16429','FK2YHUlw329','eCc3CrxO329','fPVX4jTQ219','eXDBFNJK219','fVGSuLW2y19','h5Kv0zdVu20',
+// 'fAtKjcwbU19','dNRyAiNbt19','hNUexFE7U20','gVTzEz5yT19','HDNdkglhr20','JSa0zRs5r20','K1qxbQ0UR20','k5LLSXJBq20','I7uudhqzp20','kQhpfdTNp20'];
+
 // const keyArr = ['jQwYJhjNP20','IQ0lgt1gP20','HKjG6NE9P20','hHVojtF9M20','kG4z5gaol20','FOdqmckHk19','FBICoCoxK19','JAgTocrgK20','ECaVSIRfJ19','HB9MGb5vJ20'];
 // const keyArr = ['KBOtY4QsF20','iHVofkjTe20','IUnjiImge20','KCy4Zfr5E20','FWh6FxgFB19','DX5YFbsTA19','dDVNXpEiA19','KJDHl4M8a20','kRSqwyPFA20','jSkjLWaFA20'];
-const keyArr = ['GItE6iHY1z9','JFGmIocl210','dCyFGXfOXz9','fUzSwY2NXz9','ITWDGqcLs10','fAzPhLUKSz9','iE0zUeNhS10','FUrROF9Hrz9','jSxWA0jDS10','dH7lzOnBrz9'];
+// const keyArr = ['GItE6iHY1z9','JFGmIocl210','dCyFGXfOXz9','fUzSwY2NXz9','ITWDGqcLs10','fAzPhLUKSz9','iE0zUeNhS10','FUrROF9Hrz9','jSxWA0jDS10','dH7lzOnBrz9'];
 
 const service = new chrome.ServiceBuilder('./chromedriver_mac').build();
 chrome.setDefaultService(service);
@@ -180,48 +182,56 @@ async function get_images(index) {
 
             var row = {};
 
-            var tmp = $('.tit_channel').text();
-            var tmp2 = $('._content').text();
+            try {
 
-            if (tmp) {
-                tmp = replaceAll(tmp, "'", "");
-            } else {
-                tmp = tmp2.split("'");
-                tmp = tmp[1];
-            }
+                var tmp = $('.tit_channel').text();
+                var tmp2 = $('._content').text();
 
-            row.title = tmp.trim();
-            row.writer_idx = 3;
+                if (tmp) {
+                    tmp = replaceAll(tmp, "'", "");
+                } else {
+                    tmp = tmp2.split("'");
+                    tmp = tmp[1];
+                }
+
+                row.title = tmp.trim();
+                row.writer_idx = 3;
 
 
-            if (tmp2.includes('재료-')) {
-                tmp = tmp2.split('--------------------------');
-                tmp = tmp[0];
-            } else {
-                tmp = tmp2.split('[재료]')[1];
-                tmp = tmp.split('[조리')[0];
+                if (tmp2.includes('재료-')) {
+                    tmp = tmp2.split('--------------------------');
+                    tmp = tmp[0];
+                } else if (tmp2.includes('* 재료')) {
+                    tmp = tmp2.split('--------------------------');
+                    tmp = tmp[0];
+                } else {
+                    tmp = tmp2.split('[재료]')[1];
+                    tmp = tmp.split('[조리')[0];
+                }
                 tmp = replaceAll(tmp, ' ', '');
                 tmp = replaceAll(tmp, ',', '\n');
+
+                row.jaelyo = tmp.trim();
+
+                const images = $('div.img_wrap');
+
+                images.find('._mediaImage').each(function(i, e) {
+                    // console.log(i, $(e).attr('src'));
+                    eval('row.filename' + i + '= $(e).attr("src");');
+                });
+
+                const sql = `INSERT INTO RCP_tbl SET ?`;
+                db.query(sql, row, function(err, rows, fields) {
+                    if (!err) {
+                        resolve(rows);
+                    } else {
+                        console.log(err);
+                    }
+                });
+                // resolve(row);
+            } catch (e) {
+                resolve('Err: ' + url)
             }
-
-            row.jaelyo = tmp.trim();
-
-            const images = $('div.img_wrap');
-
-            images.find('._mediaImage').each(function(i, e) {
-                // console.log(i, $(e).attr('src'));
-                eval('row.filename' + i + '= $(e).attr("src");');
-            });
-
-            const sql = `INSERT INTO RCP_tbl SET ?`;
-            db.query(sql, row, function(err, rows, fields) {
-                if (!err) {
-                    resolve(rows);
-                } else {
-                    console.log(err);
-                }
-            });
-            // resolve(row);
 
         }, 1000);
     }).then(function(data) {
