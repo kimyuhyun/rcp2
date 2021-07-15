@@ -140,6 +140,12 @@ router.get('/my_profile', userChecking, function(req, res, next) {
     });
 });
 
+router.get('/category/:gbn', userChecking, function(req, res, next) {
+    res.render('./admin/category', {
+        myinfo: req.session,
+        gbn: req.params.gbn,
+    });
+});
 
 router.get('/page/:page', userChecking, function(req, res, next) {
     res.render('./admin/' + req.params.page, {

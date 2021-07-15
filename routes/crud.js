@@ -50,6 +50,7 @@ router.post('/list', userChecking, async function(req, res, next) {
     var table = req.query.table;
     var board_id = req.query.board_id;
     var level1 = req.query.level1;
+    var gbn = req.query.gbn
     var params;
 
     if (req.body.request != null) {
@@ -74,6 +75,10 @@ router.post('/list', userChecking, async function(req, res, next) {
 
     if (level1 != null) {
         where += " AND level1 = " + level1;
+    }
+
+    if (gbn) {
+        where += " AND gbn = '" + gbn + "'";
     }
 
     if (params.search != null) {
@@ -112,8 +117,17 @@ router.post('/list', userChecking, async function(req, res, next) {
 });
 
 router.get('/iterator', userChecking, async function(req, res, next) {
-    var table = req.query.table;
-    var sql = "SELECT * FROM " + table + " ORDER BY idx DESC";
+    const table = req.query.table;
+    const sort1 = req.query.sort1;
+
+    var sql = "SELECT * FROM " + table + " ";
+    if (sort1) {
+        sql += " ORDER BY " + sort1;
+    } else {
+        sql += " ORDER BY idx DESC ";
+    }
+
+
     db.query(sql, table, function(err, rows, fields) {
         res.send(rows);
     });
