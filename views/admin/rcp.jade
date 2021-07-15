@@ -101,6 +101,9 @@ block content
 
             form(name="frmPopup", method="post")
                 input(type="hidden", name="jaelyo")
+                
+                
+            img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:99; width: 500px; height: 500px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
 
     //- 들여쓰기 중요함
     script.
@@ -179,8 +182,15 @@ block content
                             for (var i=0;i<=19;i++) {
         						eval("var fileLink = form.record.filename"+i);
         						if (fileLink != '') {
+                                    
+                                    var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
+                                    
         							$("#filename"+i+"_img").attr("src", fileLink);
-        							$("#filename"+i+"_img").attr("onclick", "window.open('"+fileLink+"')");
+        							$("#filename"+i+"_img").attr("onclick", show_image);
+                                    
+                                    
+                                    
+                                    
         							$("#filename"+i+"_x").show();
         						} else {
         							$("#filename"+i).val("");
@@ -200,7 +210,6 @@ block content
                 },
                 searches: [
                     { field: 'title', caption: '제목', type: 'text' },			//세팅 해줘야함
-                    { field: 'name1', caption: '작성자', type: 'text' },			//세팅 해줘야함
                 ],
                 columns: [
                     { field: 'idx', caption: '번호', size: '50px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
@@ -226,7 +235,7 @@ block content
                     { field: 'cate4', type: 'list', required: false },	//세팅 해줘야함
                     { field: 'cate5', type: 'list', required: false },	//세팅 해줘야함
                     
-                    { field: 'memo0', type: 'textarea', required: true },
+                    { field: 'memo0', type: 'textarea', required: false },
                     { field: 'memo1', type: 'textarea', required: false },
                     { field: 'memo2', type: 'textarea', required: false },
                     { field: 'memo3', type: 'textarea', required: false },
