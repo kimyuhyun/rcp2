@@ -9,7 +9,7 @@ html
         //- Bootstrap CSS
         link(href='https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css', rel='stylesheet')
         
-        link(rel='stylesheet', href='/stylesheets/style.css?ver=1')
+        link(rel='stylesheet', href='/stylesheets/style.css')
         link(rel='stylesheet', href='/stylesheets/w2ui-1.5.rc1.css')
 
         //- Bootstrap JS
@@ -19,7 +19,7 @@ html
         script(src='/javascripts/w2ui-1.5.rc1.js')
         script(src='/javascripts/axios.min.js')
         script(src='/javascripts/utils.js')
-        
+
     body(class='bg-light')  
         div(class='d-flex flex-wrap bg-dark')        
             if CURRENT_URL == '/admin'
@@ -31,17 +31,17 @@ html
         
         
             - each menu in SAVE_MENUS
-                if CURRENT_URL == menu.LINK
+                if CURRENT_URL == menu.link
                     - var active = 'bg-light text-dark';
                 else
                     - var active = 'bg-dark text-white';
         
                 div(style='position: relative')
-                    div(onclick='location.href=\'' + menu.LINK + '\'', class='py-3 px-5 ' + active, style='cursor: pointer;')= menu.NAME1
+                    div(onclick='location.href=\'' + menu.link + '\'', class='py-3 px-5 ' + active, style='cursor: pointer;')= menu.name1
                     div(style='position: absolute; top: 0px; right: 4px;')
-                        button(class='button_x', type='button',onclick="location.href='/admin/delete_menu?IDX=" + menu.IDX + "'")
+                        button(class='button_x', type='button',onclick="location.href='/admin/delete_menu?idx=" + menu.idx + "'")
                             span &times;
 
 
-        div(class='container-fluid py-5')
+        div(class='container-fluid py-3')
             block content

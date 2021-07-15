@@ -11,9 +11,9 @@ global.SAVE_MENUS;
 global.CURRENT_URL;
 //
 
-function checkMiddleWare(req, res, next) {
+function userChecking(req, res, next) {
     // if (process.env.NODE_ENV != 'development') {
-        if (req.session.ID == null) {
+        if (req.session.id == null) {
             res.redirect('/admin/login');
             return;
         }
@@ -27,17 +27,16 @@ function checkMiddleWare(req, res, next) {
     });
 }
 
-router.get('/', checkMiddleWare, function(req, res, next) {
-    db.query("SELECT SHOW_MENU_LINK FROM GRADE_tbl WHERE LEVEL1 = '?'", req.session.LEVEL1, function(err, rows, fields) {
-        console.log(rows);
+router.get('/', userChecking, function(req, res, next) {
+    db.query("SELECT show_menu_link FROM GRADE_tbl WHERE level1 = '?'", req.session.level1, function(err, rows, fields) {
         if (!err) {
             var tmp = "";
             if (rows.length > 0) {
-                tmp = rows[0].SHOW_MENU_LINK.substr(1, 9999).split(',');
+                tmp = rows[0].show_menu_link.substr(1, 9999).split(',');
             }
             res.render('./admin/main', {
-                SHOW_MENU_LINK: tmp,
-                LEVLE1: req.session.LEVEL1,
+                show_menu_link: tmp,
+                level1: req.session.level1,
             });
         } else {
             res.send(err);
@@ -54,13 +53,13 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/logout', function(req, res, next) {
-    // res.clearCookie('ID', {
+    // res.clearCookie('id', {
     //     path: '/'
     // });
-    // res.clearCookie('NAME1', {
+    // res.clearCookie('name1', {
     //     path: '/'
     // });
-    // res.clearCookie('LEVEL1', {
+    // res.clearCookie('level1', {
     //     path: '/'
     // });
     req.session.destroy(function(){
@@ -73,26 +72,26 @@ router.get('/logout', function(req, res, next) {
 
 // POST 는 body 로 받는다!!!
 router.post('/login', function(req, res, next) {
-    db.query("SELECT IDX, ID, NAME1, LEVEL1 FROM MEMB_tbl WHERE ID = ? AND PASS1 = PASSWORD(?)", [req.body.id, req.body.pw], function(err, rows, fields) {
+    db.query("SELECT idx, id, name1, level1 FROM MEMB_tbl WHERE id = ? AND pass1 = PASSWORD(?)", [req.body.id, req.body.pw], function(err, rows, fields) {
         if (!err) {
             if (rows[0] != null) {
                 //레벨체크
-                if (rows[0].LEVEL1 > 2) {
+                if (rows[0].level1 > 2) {
                     res.send('<script type="text/javascript">alert("접근권한이 없습니다.");history.back();</script>');
                     return;
                 }
                 //
 
-                db.query("UPDATE MEMB_tbl SET LDATE = NOW() WHERE ID = ?", req.body.id);
+                db.query("UPDATE MEMB_tbl SET modified = NOW() WHERE id = ?", req.body.id);
 
 
-                req.session.IDX = rows[0].IDX;
-                req.session.ID = rows[0].ID;
-                req.session.NAME1 = rows[0].NAME1;
-                req.session.LEVEL1 = rows[0].LEVEL1;
+                req.session.idx = rows[0].idx;
+                req.session.usr_id = rows[0].id;
+                req.session.name1 = rows[0].name1;
+                req.session.level1 = rows[0].level1;
 
                 if (req.body.remember == 1) {
-                    res.cookie('id', rows[0].ID, {
+                    res.cookie('id', rows[0].id, {
                         maxAge: 60 * 60 * 1000,
                         httpOnly: true,
                         path: '/'
@@ -127,10 +126,10 @@ router.post('/login', function(req, res, next) {
 
 
 
-router.get('/my_profile', checkMiddleWare, function(req, res, next) {
-    var sql = "SELECT * FROM MEMB_tbl WHERE IDX = ?";
+router.get('/my_profile', userChecking, function(req, res, next) {
+    var sql = "SELECT * FROM MEMB_tbl WHERE idx = ?";
 
-    db.query(sql, req.session.IDX, function(err, rows, fields) {
+    db.query(sql, req.session.idx, function(err, rows, fields) {
         if (!err) {
             res.render('./admin/my_profile', {
                 row: rows[0],
@@ -142,26 +141,17 @@ router.get('/my_profile', checkMiddleWare, function(req, res, next) {
 });
 
 
-router.get('/page/:page', checkMiddleWare, function(req, res, next) {
+router.get('/page/:page', userChecking, function(req, res, next) {
     res.render('./admin/' + req.params.page, {
         myinfo: req.session,
         board_id: req.params.page,
     });
 });
 
-router.get('/category/:gbn', checkMiddleWare, function(req, res, next) {
-    res.render('./admin/category', {
-        gbn: req.params.gbn,
-    });
-});
-
-
-
-
 // GET 는 query 로 받는다!!!
-router.get('/delete_menu', checkMiddleWare, function(req, res, next) {
-    var idx = req.query.IDX;
-    db.query('DELETE FROM SAVE_MENU_tbl WHERE IDX = ?', idx, function(err, rows, fields) {
+router.get('/delete_menu', userChecking, function(req, res, next) {
+    var idx = req.query.idx;
+    db.query('DELETE FROM SAVE_MENU_tbl WHERE idx = ?', idx, function(err, rows, fields) {
         if (!err) {
             res.redirect('/admin');
         } else {

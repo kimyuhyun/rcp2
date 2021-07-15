@@ -56,7 +56,6 @@ app.use('/analyzer', analyzerRouter);
 app.use('/api', apiRouter);
 app.use('/rcp', rcpRouter);
 
-
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     // res.status(404).send('페이지가 없습니다.');
@@ -66,8 +65,8 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-    console.log('ENV', process.env.NODE_ENV);
-    console.log('ENV', req.app.get('env'));
+    // console.log('ENV', process.env.NODE_ENV);
+    // console.log('ENV', req.app.get('env'));
 
     // set locals, only providing error in development
     res.locals.message = err.message;

@@ -14,9 +14,9 @@ global.SAVE_MENUS;
 global.CURRENT_URL;
 //
 
-function checkMiddleWare(req, res, next) {
+function userChecking(req, res, next) {
     if (process.env.NODE_ENV != 'development') {
-        if (req.session.ID == null) {
+        if (req.session.id == null) {
             res.redirect('/admin/login');
             return;
         }
@@ -30,7 +30,7 @@ function checkMiddleWare(req, res, next) {
     });
 }
 
-router.get('/graph1', checkMiddleWare, async function(req, res, next) {
+router.get('/graph1', userChecking, async function(req, res, next) {
     var gap = 0;
     var arr = new Array();
 
@@ -40,11 +40,11 @@ router.get('/graph1', checkMiddleWare, async function(req, res, next) {
         var total = 0;
 
         //총방문자 구하기
-        var sql = `SELECT COUNT(DISTINCT IP) AS CNT FROM ANALYZER_tbl WHERE LEFT(WDATE, 10) = '` + date + `'`;
+        var sql = `SELECT COUNT(DISTINCT ip) AS cnt FROM ANALYZER_tbl WHERE LEFT(created, 10) = '` + date + `'`;
         await new Promise(function(resolve, reject) {
             db.query(sql, function(err, rows, fields) {
                 if (!err) {
-                    resolve(rows[0].CNT);
+                    resolve(rows[0].cnt);
                 } else {
                     resolve(0);
                 }
@@ -55,11 +55,11 @@ router.get('/graph1', checkMiddleWare, async function(req, res, next) {
         //
 
         //신규방문자 구하기
-        sql = `SELECT COUNT(DISTINCT IP) AS CNT FROM ANALYZER_tbl WHERE VISIT = 1 AND LEFT(WDATE, 10) = '` + date + `'`;
+        sql = `SELECT COUNT(DISTINCT ip) AS cnt FROM ANALYZER_tbl WHERE VISIT = 1 AND LEFT(created, 10) = '` + date + `'`;
         await new Promise(function(resolve, reject) {
             db.query(sql, function(err, rows, fields) {
                 if (!err) {
-                    resolve(rows[0].CNT);
+                    resolve(rows[0].cnt);
                 } else {
                     resolve(0);
                 }
@@ -80,7 +80,7 @@ router.get('/graph1', checkMiddleWare, async function(req, res, next) {
     });
 });
 
-router.get('/graph2', checkMiddleWare, async function(req, res, next) {
+router.get('/graph2', userChecking, async function(req, res, next) {
     var gap = 0;
     var arr = new Array();
 
@@ -90,11 +90,11 @@ router.get('/graph2', checkMiddleWare, async function(req, res, next) {
         var total = 0;
 
         //트래픽 구하기
-        var sql = `SELECT COUNT(IP) AS CNT FROM ANALYZER_tbl WHERE LEFT(WDATE, 10) = '` + date + `'`;
+        var sql = `SELECT COUNT(ip) AS cnt FROM ANALYZER_tbl WHERE LEFT(created, 10) = '` + date + `'`;
         await new Promise(function(resolve, reject) {
             db.query(sql, function(err, rows, fields) {
                 if (!err) {
-                    resolve(rows[0].CNT);
+                    resolve(rows[0].cnt);
                 } else {
                     resolve(0);
                 }
@@ -113,7 +113,7 @@ router.get('/graph2', checkMiddleWare, async function(req, res, next) {
     });
 });
 
-router.get('/graph3', checkMiddleWare, async function(req, res, next) {
+router.get('/graph3', userChecking, async function(req, res, next) {
     var gap = 0;
     var arr = new Array();
 
@@ -133,11 +133,11 @@ router.get('/graph3', checkMiddleWare, async function(req, res, next) {
         }
 
         //오늘 시간대별 트래픽 구하기
-        var sql = `SELECT COUNT(IP) AS CNT FROM ANALYZER_tbl WHERE LEFT(WDATE, 10) = '` + today + `' AND SUBSTR(WDATE, 12, 2) = '` + time + `'`;
+        var sql = `SELECT COUNT(ip) AS cnt FROM ANALYZER_tbl WHERE LEFT(created, 10) = '` + today + `' AND SUBSTR(created, 12, 2) = '` + time + `'`;
         await new Promise(function(resolve, reject) {
             db.query(sql, function(err, rows, fields) {
                 if (!err) {
-                    resolve(rows[0].CNT);
+                    resolve(rows[0].cnt);
                 } else {
                     resolve(0);
                 }
@@ -148,11 +148,11 @@ router.get('/graph3', checkMiddleWare, async function(req, res, next) {
         //
 
         //어제 시간대별 트래픽 구하기
-        var sql = `SELECT COUNT(IP) AS CNT FROM ANALYZER_tbl WHERE LEFT(WDATE, 10) = '` + yesterday + `' AND SUBSTR(WDATE, 12, 2) = '` + time + `'`;
+        var sql = `SELECT COUNT(ip) AS cnt FROM ANALYZER_tbl WHERE LEFT(created, 10) = '` + yesterday + `' AND SUBSTR(created, 12, 2) = '` + time + `'`;
         await new Promise(function(resolve, reject) {
             db.query(sql, function(err, rows, fields) {
                 if (!err) {
-                    resolve(rows[0].CNT);
+                    resolve(rows[0].cnt);
                 } else {
                     resolve(0);
                 }
@@ -164,11 +164,11 @@ router.get('/graph3', checkMiddleWare, async function(req, res, next) {
         //
 
         //일주일전 시간대별 트래픽 구하기
-        var sql = `SELECT COUNT(IP) AS CNT FROM ANALYZER_tbl WHERE LEFT(WDATE, 10) = '` + weekago + `' AND SUBSTR(WDATE, 12, 2) = '` + time + `'`;
+        var sql = `SELECT COUNT(ip) AS cnt FROM ANALYZER_tbl WHERE LEFT(created, 10) = '` + weekago + `' AND SUBSTR(created, 12, 2) = '` + time + `'`;
         await new Promise(function(resolve, reject) {
             db.query(sql, function(err, rows, fields) {
                 if (!err) {
-                    resolve(rows[0].CNT);
+                    resolve(rows[0].cnt);
                 } else {
                     resolve(0);
                 }
@@ -192,11 +192,11 @@ router.get('/graph3', checkMiddleWare, async function(req, res, next) {
     });
 });
 
-router.get('/liveuser', checkMiddleWare, async function(req, res, next) {
+router.get('/liveuser', userChecking, async function(req, res, next) {
     res.render('./admin/liveuser');
 });
 
-router.post('/liveuser', checkMiddleWare, function(req, res, next) {
+router.post('/liveuser', userChecking, function(req, res, next) {
     var arr = new Array();
 
     fs.readdir('./liveuser', async function(err, filelist) {

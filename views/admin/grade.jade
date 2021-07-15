@@ -13,12 +13,12 @@ block content
                     div(class='w2ui-field w2ui-span2')                    
                         label 권한레벨
                         div
-                            input(name='LEVEL1')
+                            input(name='level1')
 
                     div(class='w2ui-field w2ui-span2')
                         label 권한명
                         div
-                            input(name='NAME1')
+                            input(name='name1')
 
                     div(class='w2ui-field w2ui-span3 mt-4')
                         label
@@ -32,8 +32,8 @@ block content
                                     div(class='d-flex flex-wrap align-items-start')
                                         - each row2, j in row1.child                                            
                                             div(class='d-flex flex-row align-items-center me-2')
-                                                input(class='me-1', type='checkbox', id='SHOW_MENU'+count, name='SHOW_MENU[]', value=''+row2.link)
-                                                label(for='SHOW_MENU'+count)= row2.title
+                                                input(class='me-1', type='checkbox', id='show_menu'+count, name='show_menu[]', value=''+row2.link)
+                                                label(for='show_menu'+count)= row2.title
                                             - count++
                                                 
 
@@ -52,7 +52,7 @@ block content
                     get: '/crud/list?table=' + table,
                     remove: '/crud/remove?table=' + table,                    
                 },
-                recid: 'IDX',
+                recid: 'idx',
                 limit: 20,
                 recordHeight: 30,
                 autoLoad: false,
@@ -63,7 +63,7 @@ block content
                     toolbar: true,
                     toolbarDelete: true,
                 },
-                sortData: [{ field: 'LEVEL1', direction: 'ASC' }],
+                sortData: [{ field: 'level1', direction: 'ASC' }],
                 multiSelect: true,
                 multiSearch: true,
                 onError:function(e){
@@ -83,9 +83,9 @@ block content
                             form.record = $.extend(true, {}, grid.get(sel[0]));
                             
                             //여기서 체크박스 값 세팅 해준다.
-                            $("input[name='SHOW_MENU[]']").prop('checked', false);
-                            var tmpArr = form.record.SHOW_MENU_LINK.substr(1,9999).split(",");
-                            $("input[name='SHOW_MENU[]']").each(function() {
+                            $("input[name='show_menu[]']").prop('checked', false);
+                            var tmpArr = form.record.show_menu_link.substr(1,9999).split(",");
+                            $("input[name='show_menu[]']").each(function() {
                                 for (var i in tmpArr) {
                                     if ($(this).val() == tmpArr[i]) {
                                         $(this).prop('checked', true);
@@ -103,21 +103,21 @@ block content
                     }
                 },
                 searches: [
-                    { field: 'NAME1', caption: '권한명', type: 'text' },			//세팅 해줘야함
-                    { field: 'LEVEL1', caption: '레벨', type: 'int' },			//세팅 해줘야함
+                    { field: 'name1', caption: '권한명', type: 'text' },			//세팅 해줘야함
+                    { field: 'level1', caption: '레벨', type: 'int' },			//세팅 해줘야함
                 ],
                 columns: [
-                    { field: 'IDX', caption: '번호', size: '50px', sortable: true, resizable: true, attr: 'align=center' },
-                    { field: 'LEVEL1', caption: '권한레벨', size: '80px', sortable: true, resizable: true, attr: 'align=center' },				//세팅 해줘야함
-                    { field: 'NAME1', caption: '권한명', size: '100%', min: 250, sortable: true, resizable: true, attr: 'align=left' },					//세팅 해줘야함
-                    { field: 'WDATE', caption: '생성일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
+                    { field: 'idx', caption: '번호', size: '50px', sortable: true, resizable: true, attr: 'align=center' },
+                    { field: 'level1', caption: '권한레벨', size: '80px', sortable: true, resizable: true, attr: 'align=center' },				//세팅 해줘야함
+                    { field: 'name1', caption: '권한명', size: '100%', min: 250, sortable: true, resizable: true, attr: 'align=left' },					//세팅 해줘야함
+                    { field: 'created', caption: '생성일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
                         render: function(rec) {
-                            return util_convert_to_millis(rec.WDATE);
+                            return util_convert_to_millis(rec.created);
                         }
                     },
-                    { field: 'LDATE', caption: '수정일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
+                    { field: 'modified', caption: '수정일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
                         render: function(rec) {
-                            return util_convert_to_millis(rec.LDATE);
+                            return util_convert_to_millis(rec.modified);
                         }
                     },
                 ],
@@ -125,13 +125,13 @@ block content
             form: {
                 name: 'form',
                 fields: [
-                    { field: 'LEVEL1', type: 'int', required: false },
-                    { field: 'NAME1', type: 'text', required: false },
+                    { field: 'level1', type: 'int', required: false },
+                    { field: 'name1', type: 'text', required: false },
                 ],
                 actions: {
                     reset: function () {
                         this.clear();
-                        $("input[name='SHOW_MENU[]']").prop('checked', false);
+                        $("input[name='show_menu[]']").prop('checked', false);
                         $("#save").text("입력");
                     },
                     save: function () {
@@ -143,7 +143,7 @@ block content
                         var showMenuList = "";
                         
                         //체크박스는 제이쿼리로 처리하자!!
-                        $("input[name='SHOW_MENU[]']").each(function() {
+                        $("input[name='show_menu[]']").each(function() {
                             if (this.checked) {
                                 showMenuList += "," + $(this).val();
                             }
@@ -153,7 +153,7 @@ block content
                         //- 세팅해줘야함.
                         this.record.table = table;
                         //
-                        this.record.SHOW_MENU_LINK = showMenuList;
+                        this.record.show_menu_link = showMenuList;
                         
                         var formData = new FormData();
                         var self = this;
@@ -170,7 +170,7 @@ block content
                             } else if (res.data.code == 2) {
                                 $("#save").text("입력");
                                 w2ui.form.clear();
-                                w2ui.grid.set(res.data.record.IDX, res.data.record, false);
+                                w2ui.grid.set(res.data.record.idx, res.data.record, false);
                                 w2ui.grid.selectNone();
                             }
                         });
@@ -184,7 +184,7 @@ block content
                         w2alert(result.msg);
                         w2ui.grid.reload();
                         this.clear();
-                        $("input[name='SHOW_MENU[]']").prop('checked', false);
+                        $("input[name='show_menu[]']").prop('checked', false);
                         $("#save").text("입력");
                     }
                 },

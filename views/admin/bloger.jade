@@ -13,17 +13,17 @@ block content
                     div(class='w2ui-field w2ui-span3')
                         label 블로거
                         div
-                            input(name='NAME1')
+                            input(name='name1')
                             
                     div(class='w2ui-field w2ui-span3')
                         label 이미지
                         div
-                            input(name='THUMB')
+                            input(name='thumb')
                             
                     div(class='w2ui-field w2ui-span3')
-                        label 블로거URL
+                        label 블로거url
                         div
-                            input(name='URL')
+                            input(name='url')
 
                 div(class='w2ui-buttons')
                     button(class='w2ui-btn' name='reset') 리셋
@@ -39,7 +39,7 @@ block content
                     get: '/crud/list?table=' + table,
                     remove: '/crud/remove?table=' + table,                    
                 },
-                recid: 'IDX',
+                recid: 'idx',
                 limit: 20,
                 recordHeight: 30,
                 autoLoad: false,
@@ -50,7 +50,7 @@ block content
                     toolbar: true,
                     toolbarDelete: true,
                 },
-                sortData: [{ field: 'IDX', direction: 'DESC' }],
+                sortData: [{ field: 'idx', direction: 'DESC' }],
                 multiSelect: true,
                 multiSearch: true,
                 onError:function(e){
@@ -79,27 +79,27 @@ block content
                     }
                 },
                 searches: [
-                    { field: 'TITLE', caption: '제목', type: 'text' },			//세팅 해줘야함
-                    { field: 'NAME1', caption: '작성자', type: 'text' },			//세팅 해줘야함
+                    { field: 'title', caption: '제목', type: 'text' },			//세팅 해줘야함
+                    { field: 'name1', caption: '작성자', type: 'text' },			//세팅 해줘야함
                 ],
                 columns: [
-                    { field: 'IDX', caption: '번호', size: '50px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
-                    { field: 'THUMB', caption: '썸네일', size: '50px', sortable: true, resizable: true, attr: 'align=center',	//세팅 해줘야함
+                    { field: 'idx', caption: '번호', size: '50px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
+                    { field: 'thumb', caption: '썸네일', size: '50px', sortable: true, resizable: true, attr: 'align=center',	//세팅 해줘야함
                         render: function(record) {
-                            if (record.THUMB != '') {
-                                return '<img src="' + record.THUMB + '" style="width: 50px; height: 30px;" />';
+                            if (record.thumb != '') {
+                                return '<img src="' + record.thumb + '" style="width: 50px; height: 30px;" />';
                             }
                         }
                     },
-                    { field: 'NAME1', caption: '블로거', size: '100%', min: 250, sortable: true, resizable: true, attr: 'align=left' },	//세팅 해줘야함
-                    { field: 'WDATE', caption: '생성일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
+                    { field: 'name1', caption: '블로거', size: '100%', min: 250, sortable: true, resizable: true, attr: 'align=left' },	//세팅 해줘야함
+                    { field: 'created', caption: '생성일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
                         render: function(rec) {
-                            return util_convert_to_millis(rec.WDATE);
+                            return util_convert_to_millis(rec.created);
                         }
                     },
-                    { field: 'LDATE', caption: '수정일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
+                    { field: 'modified', caption: '수정일', size: '80px', resizable: true, sortable: true, attr: 'align=center',
                         render: function(rec) {
-                            return util_convert_to_millis(rec.LDATE);
+                            return util_convert_to_millis(rec.modified);
                         }
                     },
                 ],
@@ -107,9 +107,9 @@ block content
             form: {
                 name: 'form',
                 fields: [
-                    { field: 'NAME1', type: 'text', required: true },	//세팅 해줘야함
-                    { field: 'THUMB', type: 'text', required: true },	//세팅 해줘야함
-                    { field: 'URL', type: 'text', required: true },	//세팅 해줘야함
+                    { field: 'name1', type: 'text', required: true },	//세팅 해줘야함
+                    { field: 'thumb', type: 'text', required: true },	//세팅 해줘야함
+                    { field: 'url', type: 'text', required: true },	//세팅 해줘야함
                 ],
                 actions: {
                     reset: function () {
@@ -143,7 +143,7 @@ block content
                                 }, 500);
                             } else if (res.data.code == 2) {
                                 setTimeout(function(){
-                                    w2ui.grid.set(res.data.record.IDX, res.data.record, false);
+                                    w2ui.grid.set(res.data.record.idx, res.data.record, false);
                                     w2ui.grid.selectNone();    
                                 }, 500);
                             }

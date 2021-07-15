@@ -9,6 +9,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/check_jaelyo', function(req, res, next) {
+
+    console.log(req.body);
+
     var html = `
         <!doctype html>
         <html lang="en">
@@ -21,7 +24,7 @@ router.post('/check_jaelyo', function(req, res, next) {
             <div class="d-flex flex-column">
     `;
 
-    var str = req.body.JAELYO.split('\r\n');
+    var str = req.body.jaelyo.split('\r\n');
 
     for (obj of str) {
         if (obj.substring(0, 1) == '*') {
@@ -64,14 +67,6 @@ router.post('/check_jaelyo', function(req, res, next) {
     res.send(html);
 
 });
-
-
-router.get('/get_cp_link', function(req, res, next) {
-    res.send('get_cp_link');
-});
-
-
-
 
 
 module.exports = router;

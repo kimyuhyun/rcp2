@@ -1,46 +1,70 @@
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
-var db = require('../db');
-var menus = require('../menu');
-var utils = require('../Utils');
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
+const fs = require('fs');
+const db = require('../db');
+const utils = require('../Utils');
+const moment = require('moment');
 
-//메뉴를 전역변수에 넣어준다!
-global.MENUS = menus;
-global.SAVE_MENUS;
-global.CURRENT_URL;
-//
 
-function checkMiddleWare(req, res, next) {
-    if (process.env.NODE_ENV != 'development') {
-        if (req.session.ID == null) {
-            res.redirect('/admin/login');
-            return;
-        }
-    }
-
-    CURRENT_URL = req.baseUrl + req.path;
-
-    utils.setSaveMenu(req).then(function(data) {
-        SAVE_MENUS = data;
-        next();
-    });
-}
-
-router.get('/graph1', checkMiddleWare, function(req, res, next) {
+async function setLog(req, res, next) {
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    var rows;
     await new Promise(function(resolve, reject) {
-        var sql = ``;
-        db.query(sql, function(err, rows, fields) {
-            console.log(rows);
+        var sql = `SELECT visit FROM ANALYZER_tbl WHERE ip = ? ORDER BY idx DESC LIMIT 0, 1`;
+        db.query(sql, ip, function(err, rows, fields) {
             if (!err) {
-
-            } else {
-                res.send(err);
+                resolve(rows);
             }
         });
-    }).then((data) => {
-        
+    }).then(function(data){
+        rows = data;
     });
+
+    await new Promise(function(resolve, reject) {
+        var sql = `INSERT INTO ANALYZER_tbl SET ip = ?, agent = ?, visit = ?, created = NOW()`;
+        if (rows.length > 0) {
+            var cnt = rows[0].visit + 1;
+            db.query(sql, [ip, req.headers['user-agent'], cnt], function(err, rows, fields) {
+                resolve(cnt);
+            });
+        } else {
+            db.query(sql, [ip, req.headers['user-agent'], 1], function(err, rows, fields) {
+                resolve(1);
+            });
+        }
+    }).then(function(data) {
+        console.log(data);
+    });
+
+    //현재 접속자 파일 생성
+    var memo = new Date().getTime() + "|S|" + req.baseUrl + req.path;
+    fs.writeFile('./liveuser/'+ip, memo, function(err) {
+        console.log(memo);
+    });
+    //
+    next();
+}
+
+
+
+router.get('/', setLog, async function(req, res, next) {
+
+    // await new Promise(function(resolve, reject) {
+    //     var sql = ``;
+    //     db.query(sql, function(err, rows, fields) {
+    //         console.log(rows);
+    //         if (!err) {
+    //
+    //         } else {
+    //             console.log(err);
+    //         }
+    //     });
+    // }).then(function(data) {
+    //
+    // });
+
+    res.send('api');
 });
 
 

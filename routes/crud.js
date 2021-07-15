@@ -1,14 +1,15 @@
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
-var fs = require('fs')
-var multer = require('multer');
-var uniqid = require('uniqid');
-var db = require('../db');
-var utils = require('../Utils');
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
+const fs = require('fs')
+const multer = require('multer');
+const uniqid = require('uniqid');
+const db = require('../db');
+const utils = require('../Utils');
+const FormData = require('form-data');
+const axios = require('axios');
 
-
-var upload = multer({
+const upload = multer({
     storage: multer.diskStorage({
         destination: function(req, file, cb) {
             var date = new Date();
@@ -34,9 +35,9 @@ var upload = multer({
 });
 
 
-function checkMiddleWare(req, res, next) {
+function userChecking(req, res, next) {
     if (process.env.NODE_ENV != 'development') {
-        if (req.session.ID == null) {
+        if (req.session.id == null) {
             res.redirect('/admin/login');
             return;
         }
@@ -45,10 +46,9 @@ function checkMiddleWare(req, res, next) {
 }
 
 
-router.post('/list', checkMiddleWare, async function(req, res, next) {
+router.post('/list', userChecking, async function(req, res, next) {
     var table = req.query.table;
     var board_id = req.query.board_id;
-    var gbn = req.query.gbn;
     var level1 = req.query.level1;
     var params;
 
@@ -69,15 +69,11 @@ router.post('/list', checkMiddleWare, async function(req, res, next) {
     var rows = params.limit;
 
     if (board_id != null) {
-        where += " AND BOARD_ID = '" + board_id + "'";
-    }
-
-    if (gbn != null) {
-        where += " AND GBN = '" + gbn + "'";
+        where += " AND board_id = '" + board_id + "'";
     }
 
     if (level1 != null) {
-        where += " AND LEVEL1 = " + level1;
+        where += " AND level1 = " + level1;
     }
 
     if (params.search != null) {
@@ -88,7 +84,7 @@ router.post('/list', checkMiddleWare, async function(req, res, next) {
             }
             tmp += params.search[i].field + " LIKE '%" + params.search[i].value + "%'";
         }
-        where += "AND (" + tmp + ")";
+        where += " AND (" + tmp + ")";
     }
 
 
@@ -101,7 +97,7 @@ router.post('/list', checkMiddleWare, async function(req, res, next) {
     if (params.sort != null) {
         orderby = " ORDER BY " + params.sort[0].field + " " + params.sort[0].direction;
     } else {
-        orderby = " ORDER BY IDX DESC ";
+        orderby = " ORDER BY idx DESC ";
     }
 
     sql = "SELECT * FROM " + table + where + orderby + " LIMIT " + start + ", " + rows;
@@ -115,17 +111,17 @@ router.post('/list', checkMiddleWare, async function(req, res, next) {
     });
 });
 
-router.get('/iterator', checkMiddleWare, async function(req, res, next) {
+router.get('/iterator', userChecking, async function(req, res, next) {
     var table = req.query.table;
-    var sql = "SELECT * FROM " + table + " ORDER BY IDX DESC";
+    var sql = "SELECT * FROM " + table + " ORDER BY idx DESC";
     db.query(sql, table, function(err, rows, fields) {
         res.send(rows);
     });
 });
 
-router.post('/write', checkMiddleWare, upload.array('FILES'), async function(req, res, next) {
+router.post('/write', userChecking, upload.array('FILES'), async function(req, res, next) {
     var table = req.body.table;
-    var idx = req.body.IDX;
+    var idx = req.body.idx;
 
     var uploadedLength = 0;
     if (req.body.UPLOADED_FILES != null && req.body.UPLOADED_FILES != '') {
@@ -134,19 +130,18 @@ router.post('/write', checkMiddleWare, upload.array('FILES'), async function(req
 
     for (i in req.files) {
         var fileIndex = Number(i) + Number(uploadedLength);
-        // console.log("req.body.FILENAME" + fileIndex, i, uploadedLength);
         await utils.setResize(req.files[i]).then(function(newFileName) {
             newFileName = process.env.HOST_NAME + '/' + newFileName;
             console.log('newFileName', newFileName);
-            eval("req.body.FILENAME" + fileIndex + " = newFileName");
+            eval("req.body.filename" + fileIndex + " = newFileName");
         });
     }
 
     delete req.body.recid;
     delete req.body.table;
-    delete req.body.IDX;
-    delete req.body.WDATE;
-    delete req.body.LDATE;
+    delete req.body.idx;
+    delete req.body.created;
+    delete req.body.modified;
     delete req.body.UPLOADED_FILES;
     delete req.body.FILES;
 
@@ -155,7 +150,7 @@ router.post('/write', checkMiddleWare, upload.array('FILES'), async function(req
 
     for (key in req.body) {
         if (req.body[key] != 'null') {
-            if (key == 'PASS1') {
+            if (key == 'pass1') {
                 sql += key + '= PASSWORD(?), ';
             } else {
                 sql += key + '= ?, ';
@@ -168,7 +163,7 @@ router.post('/write', checkMiddleWare, upload.array('FILES'), async function(req
     // console.log(records);return;
 
     if (idx == null) {
-        sql = "INSERT INTO " + table + " SET " + sql + " WDATE = NOW(), LDATE = NOW()";
+        sql = "INSERT INTO " + table + " SET " + sql + " created = NOW(), modified = NOW()";
         await db.query(sql, records, function(err, rows, fields) {
             if (!err) {
                 var arr = new Object();
@@ -181,27 +176,25 @@ router.post('/write', checkMiddleWare, upload.array('FILES'), async function(req
         });
     } else {
         records.push(idx);
-        sql = "UPDATE " + table + " SET " + sql + " LDATE = NOW() WHERE IDX = ?";
+        sql = "UPDATE " + table + " SET " + sql + " modified = NOW() WHERE idx = ?";
         await db.query(sql, records, function(err, rows, fields) {
             if (!err) {
-                db.query("SELECT * FROM " + table + " WHERE IDX = ?", idx, function(err, rows, fields) {
+                db.query("SELECT * FROM " + table + " WHERE idx = ?", idx, function(err, rows, fields) {
                     var arr = new Object();
                     arr['code'] = 2;
                     arr['msg'] = '수정 되었습니다.';
                     arr['record'] = rows[0];
                     res.send(arr);
                 });
-
-
             } else {
                 res.send(err);
             }
         });
     }
-    console.log(sql, records);
+    // console.log(sql, records);
 });
 
-router.get('/view', checkMiddleWare, async function(req, res, next) {
+router.get('/view', userChecking, async function(req, res, next) {
     console.log('/view', req.body);
 
     var arr = new Object();
@@ -209,13 +202,25 @@ router.get('/view', checkMiddleWare, async function(req, res, next) {
     res.send(arr);
 });
 
-router.post('/remove', checkMiddleWare, async function(req, res, next) {
+router.post('/delete', userChecking, async function(req, res, next) {
+    const table = req.body.table;
+    const idx = req.body.idx;
+    const sql = "DELETE FROM " + table + " WHERE idx = ?";
+    db.query(sql, idx);
+
+    res.send({
+        code: 1,
+        msg: '삭제 되었습니다.'
+     });
+});
+
+router.post('/remove', userChecking, async function(req, res, next) {
     var table = req.query.table;
     var params = JSON.parse(req.body.request);
     console.log(params);
     var sql = "";
     for (idx of params.selected) {
-        sql = "DELETE FROM " + table + " WHERE IDX = " + idx;
+        sql = "DELETE FROM " + table + " WHERE idx = " + idx;
         db.query(sql);
         console.log(sql);
     }
@@ -225,34 +230,56 @@ router.post('/remove', checkMiddleWare, async function(req, res, next) {
     res.send(arr);
 });
 
-router.get('/file_upload', function(req, res, next) {
-    var html = `
-        <div>`+process.env.HOST_NAME+`</div>
-        <form method='post' action='./file_upload' enctype='multipart/form-data'>
-            <input type='file' name='upload_file' />
-            <input type='submit'>
-        </form>
-    `;
-    res.send(html);
-});
 
+router.post('/copy', userChecking, async function(req, res, next) {
+    const table = req.query.table;
+    let sql = "";
 
-router.post('/file_upload', upload.single('upload_file'), async function(req, res, next) {
-    await utils.setResize(req.file).then(function(newFileName) {
-        newFileName = process.env.HOST_NAME + '/' + newFileName;
-        console.log('newFileName', newFileName);
-        res.send(newFileName);
+    for (idx of req.body.idx) {
+        await new Promise(function(resolve, reject) {
+            sql = 'SELECT * FROM ' + table + ' WHERE idx = ?';
+            db.query(sql, idx, function(err, rows, fields) {
+                if (!err) {
+                    delete rows[0].idx;
+                    delete rows[0].modified;
+                    delete rows[0].created;
+
+                    let records = [];
+                    sql = 'INSERT INTO ' + table + ' SET ';
+                    for (key in rows[0]) {
+                        if (rows[0][key] != 'null') {
+                            if (key == 'pass1') {
+                                sql += key + '=PASSWORD(?),';
+                            } else {
+                                sql += key + '=?,';
+                            }
+                            records.push(rows[0][key]);
+                        }
+                    }
+                    sql += 'created=NOW(),modified=NOW()';
+                    db.query(sql, records, function(err, rows, fields) {
+                        resolve();
+                    });
+                } else {
+                    console.log(err);
+                }
+            });
+        }).then();
+    }
+
+    res.send({
+        code: 1,
     });
 });
 
-router.post('/file_delete', checkMiddleWare, async function(req, res, next) {
-    var fileName = req.body.filename;
-    fileName = fileName.replace(process.env.HOST_NAME, '.');
-    await fs.exists(fileName, function(exists) {
+
+router.post('/file_delete', userChecking, async function(req, res, next) {
+    console.log(req.body.filename);
+    await fs.exists(req.body.filename, function(exists) {
         console.log(exists);
         var arr = new Object();
         if (exists) {
-            fs.unlink(fileName, function(err) {
+            fs.unlink(req.body.filename, function(err) {
                 if (!err) {
                     arr['code'] = 1;
                     res.send(arr);
