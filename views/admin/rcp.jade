@@ -60,7 +60,7 @@ block content
                             div(class='w2ui-field w2ui-span2')
                                 label 재료
                                 div
-                                    textarea(name='jaelyo', rows='7', style='font-size: 14px;')
+                                    textarea(id='jaelyo' name='jaelyo', rows='14', style='font-size: 14px;')
                                     button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
                             
                             
@@ -68,7 +68,7 @@ block content
                     div(class='d-flex flex-row')
                         div(class='flex-column flex-fill')
                             - var title = '';
-                            - for (var i=0;i<=5;i++)
+                            - for (var i=0;i<=4;i++)
                                 if i == 0
                                     - title = '대표사진'
                                 else
@@ -83,7 +83,7 @@ block content
                                         textarea(name='memo#{i}', style='width: 100%; height: 80px;')
                                     
                         div(class='flex-column flex-fill')
-                            - for (var i=6;i<=11;i++)
+                            - for (var i=5;i<=9;i++)
                                 div(class='w2ui-field w2ui-span2')
                                     label 순서#{i}
                                     div(class='d-flex flex-row')
@@ -94,7 +94,7 @@ block content
                                         textarea(name='memo#{i}', style='width: 100%; height: 80px;')
                                         
                         div(class='flex-column flex-fill')
-                            - for (var i=12;i<=17;i++)
+                            - for (var i=10;i<=14;i++)
                                 div(class='w2ui-field w2ui-span2')
                                     label 순서#{i}
                                     div(class='d-flex flex-row')
@@ -105,7 +105,7 @@ block content
                                         textarea(name='memo#{i}', style='width: 100%; height: 80px;')
                                         
                         div(class='flex-column flex-fill')
-                            - for (var i=18;i<=19;i++)
+                            - for (var i=15;i<=19;i++)
                                 div(class='w2ui-field w2ui-span2')
                                     label 순서#{i}
                                     div(class='d-flex flex-row')
@@ -127,6 +127,19 @@ block content
                 
             img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:99; width: 500px; height: 500px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
 
+            div(id='jaelyo_helper' class='shadow d-flex flex-row' style='position: absolute; z-index:99; background: #fff; display: none; font-size: 10px;')
+                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("숟갈");') 숟갈
+                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("개");') 개
+                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("컵");') 컵
+                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("대");') 대
+                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("주먹");') 주먹
+                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("꼬집");') 꼬집
+                
+                
+                
+                
+                
+                
     //- 들여쓰기 중요함
     script.
         var cate1 = [];
@@ -326,7 +339,7 @@ block content
                                     formClear();
                                 }, 300);
                             }
-                            
+                            $("#rcp_img").hide();
                         });
                     },
                     check_jaelyo: function() {
@@ -353,6 +366,15 @@ block content
         $(function () {
             $('#grid').w2grid(config.grid);
             $('#form').w2form(config.form);
+            
+            $('#jaelyo').mousedown(function(event) {
+                if (event.which == 1) {
+                    $("#jaelyo_helper").css("top", event.pageY);
+                    $("#jaelyo_helper").css("left", event.pageX + 50);
+                    
+                    $("#jaelyo_helper").show();
+                }
+            });
             
             //카테고리 불러오기
             axios.get('/crud/iterator?table=CATEGORYS_tbl&sort1=sort1 ASC').then(function(res) {
@@ -475,4 +497,20 @@ block content
             $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
             $("#filename"+i+"_img").attr("onclick", "");
             $("#filename"+i+"_x").hide();
+        }
+        function setJaelyoText(txt) {
+            var element     =         document.getElementById('jaelyo');
+            var strOriginal =         element.value;
+            var iStartPos   =         element.selectionStart;
+            var iEndPos     =         element.selectionEnd;
+            var strFront    =         "";
+            var strEnd      =         "";
+
+            if (iStartPos == iEndPos) {
+                strFront = strOriginal.substring(0, iStartPos);
+                strEnd = strOriginal.substring(iStartPos, strOriginal.length);
+            } else {
+                return;    
+            }
+            element.value = strFront + txt + strEnd;
         }
