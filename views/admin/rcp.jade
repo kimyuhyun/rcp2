@@ -60,12 +60,12 @@ block content
                             div(class='w2ui-field w2ui-span2')
                                 label 재료
                                 div
-                                    textarea(id='jaelyo' name='jaelyo', rows='14', style='font-size: 14px;')
+                                    textarea(id='jaelyo' name='jaelyo', rows='13', style='font-size: 14px;')
                                     button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
                             
                             
 
-                    div(class='d-flex flex-row')
+                    div(class='d-flex flex-row mt-3')
                         div(class='flex-column flex-fill')
                             - var title = '';
                             - for (var i=0;i<=4;i++)
@@ -127,13 +127,14 @@ block content
                 
             img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:99; width: 500px; height: 500px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
 
-            div(id='jaelyo_helper' class='shadow d-flex flex-row' style='position: absolute; z-index:99; background: #fff; display: none; font-size: 10px;')
-                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("숟갈");') 숟갈
-                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("개");') 개
-                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("컵");') 컵
-                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("대");') 대
-                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("주먹");') 주먹
-                button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("꼬집");') 꼬집
+            div(id='jaelyo_helper' class='shadow' style='position: absolute; z-index:99; background: #fff; display: none; font-size: 10px;')
+                div(class='d-flex flex-row')
+                    button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("숟갈");') 숟갈
+                    button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("개");') 개
+                    button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("컵");') 컵
+                    button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("대");') 대
+                    button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("주먹");') 주먹
+                    button(class='btn btn-light btn-sm py-0' onclick='setJaelyoText("꼬집");') 꼬집
                 
                 
                 
@@ -370,7 +371,7 @@ block content
             $('#jaelyo').mousedown(function(event) {
                 if (event.which == 1) {
                     $("#jaelyo_helper").css("top", event.pageY);
-                    $("#jaelyo_helper").css("left", event.pageX + 50);
+                    $("#jaelyo_helper").css("left", event.pageX + 20);
                     
                     $("#jaelyo_helper").show();
                 }
