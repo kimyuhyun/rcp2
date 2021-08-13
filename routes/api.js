@@ -270,6 +270,38 @@ router.get('/get_search/:q', setLog, async function(req, res, next) {
     res.send(arr);
 });
 
+router.get('/get_categorys', setLog, async function(req, res, next) {
+
+    var arr = {};
+
+    const gbns = ['cate1', 'cate2', 'cate3', 'cate4', 'cate5'];
+
+    for (gbn of gbns) {
+        await new Promise(function(resolve, reject) {
+            const sql = `SELECT name1 FROM CATEGORYS_tbl WHERE gbn = ? ORDER BY sort1 ASC`;
+            db.query(sql, gbn, function(err, rows, fields) {
+                // console.log(rows);
+                if (!err) {
+                    resolve(rows);
+                } else {
+                    console.log(err);
+                    resolve(err);
+                }
+            });
+        }).then(function(data) {
+            var array = [];
+            for (obj of data) {
+                array.push(obj.name1);
+            }
+            arr[gbn] = array;
+        });
+    }
+
+
+
+    res.send(arr);
+});
+
 router.get('/', setLog, async function(req, res, next) {
 
     // var arr = [];
