@@ -45,18 +45,250 @@ async function setLog(req, res, next) {
     next();
 }
 
-router.get('/', setLog, function(req, res, next) {
-    // var sql = ``;
-    // db.query(sql, function(err, rows, fields) {
-    //     console.log(rows);
-    //     if (!err) {
-    //
-    //     } else {
-    //         res.send(err);
-    //     }
-    // });
+router.get('/home', setLog, async function(req, res, next) {
+    var arr = {};
 
-    res.send('api');
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM RCP_tbl as A
+            ORDER BY RAND() LIMIT 0, 10
+        `;
+
+        db.query(sql, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(function(data) {
+        arr.recommend = utils.nvl(data);
+    });
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM RCP_tbl as A
+            WHERE A.writer_idx = 4
+            ORDER BY RAND() LIMIT 0, 10
+        `;
+        db.query(sql, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(function(data) {
+        arr.soomi = utils.nvl(data);
+    });
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM RCP_tbl as A
+            WHERE A.writer_idx = 3
+            ORDER BY RAND() LIMIT 0, 10
+        `;
+        db.query(sql, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(function(data) {
+        arr.zipbab = utils.nvl(data);
+    });
+
+    res.send(arr);
+});
+
+
+router.get('/detail/:id/:idx', setLog, async function(req, res, next) {
+    const id = req.params.id;
+    const idx = req.params.idx;
+    var obj = {};
+    var cnt = 0;
+
+    //조회수 업데이트!
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT COUNT(*) as cnt FROM RCP_SEE_tbl WHERE id = ? AND rcp_idx = ?`;
+        db.query(sql, [id, idx], function(err, rows, fields) {
+            if (!err) {
+                resolve(rows[0]);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        cnt = data.cnt;
+    });
+
+    if (cnt == 0) {
+        const sql = `INSERT INTO RCP_SEE_tbl SET id = ?, rcp_idx = ?`;
+        db.query(sql, [id, idx]);
+    }
+    //
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.*,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb,
+            (SELECT url FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_url,
+            (SELECT COUNT(*) FROM RCP_FAV_tbl WHERE id = ? AND rcp_idx = A.idx) as is_fav
+            FROM RCP_tbl as A
+            WHERE A.idx = ?
+        `;
+        db.query(sql, [id, idx], function(err, rows, fields) {
+            console.log(rows);
+            if (!err) {
+                resolve(rows[0]);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        obj = utils.nvl(data);
+    });
+    res.send(obj);
+});
+
+router.get('/set_fav/:id/:idx', setLog, async function(req, res, next) {
+    const id = req.params.id;
+    const idx = req.params.idx;
+    var obj = {};
+    var cnt = 0;
+
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT COUNT(*) as cnt FROM RCP_FAV_tbl WHERE id = ? AND rcp_idx = ?`;
+        db.query(sql, [id, idx], function(err, rows, fields) {
+            if (!err) {
+                resolve(rows[0]);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        cnt = data.cnt;
+    });
+
+    var sql = ``;
+    if (cnt == 0) {
+        sql = `INSERT INTO RCP_FAV_tbl SET id = ?, rcp_idx = ?`;
+        res.send({ code: 1 });
+    } else {
+        sql = `DELETE FROM RCP_FAV_tbl WHERE id = ? AND rcp_idx = ?`;
+        res.send({ code: 0 });
+    }
+    db.query(sql, [id, idx]);
+    //
+});
+
+router.get('/get_fav/:id', setLog, async function(req, res, next) {
+    const id = req.params.id;
+    var arr = [];
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM
+            RCP_tbl as A, RCP_FAV_tbl as B
+            WHERE A.idx = B.rcp_idx
+            AND B.id = ?
+            ORDER BY B.idx DESC
+            `;
+        db.query(sql, id, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        arr = utils.nvl(data);
+    });
+
+    res.send(arr);
+});
+
+
+router.get('/get_search/:q', setLog, async function(req, res, next) {
+    const q = '%' + req.params.q + '%';
+    var arr = [];
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM
+            RCP_tbl as A
+            WHERE (title LIKE ? OR jaelyo LIKE ?)
+            ORDER BY A.title ASC
+            `;
+        db.query(sql, [q, q], function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(function(data) {
+        arr = utils.nvl(data);
+    });
+    res.send(arr);
+});
+
+router.get('/', setLog, async function(req, res, next) {
+
+    // var arr = [];
+    // await new Promise(function(resolve, reject) {
+    //     const sql = ``;
+    //     db.query(sql, function(err, rows, fields) {
+    //         console.log(rows);
+    //         if (!err) {
+    //             resolve(rows);
+    //         } else {
+    //             console.log(err);
+    //             resolve(err);
+    //         }
+    //     });
+    // }).then(function(data) {
+    //     arr = utils.nvl(data);
+    // });
+    //
+    // res.send('api');
 });
 
 
