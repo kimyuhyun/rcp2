@@ -36,11 +36,9 @@ const upload = multer({
 
 
 function userChecking(req, res, next) {
-    if (process.env.NODE_ENV != 'development') {
-        if (req.session.id == null) {
-            res.redirect('/admin/login');
-            return;
-        }
+    if (req.session.mid == null) {
+        res.redirect('/admin/login');
+        return;
     }
     next();
 }
