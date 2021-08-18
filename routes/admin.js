@@ -13,10 +13,11 @@ global.CURRENT_URL;
 
 function userChecking(req, res, next) {
     // if (process.env.NODE_ENV != 'development') {
-        if (req.session.id == null) {
-            res.redirect('/admin/login');
-            return;
-        }
+    console.log(req.session.mid);
+    if (req.session.mid == null) {
+        res.redirect('/admin/login');
+        return;
+    }
     // }
 
     CURRENT_URL = req.baseUrl + req.path;
@@ -47,7 +48,7 @@ router.get('/', userChecking, function(req, res, next) {
 router.get('/login', function(req, res, next) {
     res.render('./admin/login', {
         year: new Date().getFullYear(),
-        id: req.cookies['id'],
+        id: req.cookies['mid'],
         pw: req.cookies['pw'],
     });
 });
@@ -72,7 +73,8 @@ router.get('/logout', function(req, res, next) {
 
 // POST 는 body 로 받는다!!!
 router.post('/login', function(req, res, next) {
-    db.query("SELECT idx, id, name1, level1 FROM MEMB_tbl WHERE id = ? AND pass1 = PASSWORD(?)", [req.body.id, req.body.pw], function(err, rows, fields) {
+    const sql = 'SELECT idx, id, name1, level1 FROM MEMB_tbl WHERE id = ? AND pass1 = PASSWORD(?)';
+    db.query(sql, [req.body.id, req.body.pw], function(err, rows, fields) {
         if (!err) {
             if (rows[0] != null) {
                 //레벨체크
@@ -86,12 +88,12 @@ router.post('/login', function(req, res, next) {
 
 
                 req.session.idx = rows[0].idx;
-                req.session.usr_id = rows[0].id;
+                req.session.mid = rows[0].id;
                 req.session.name1 = rows[0].name1;
                 req.session.level1 = rows[0].level1;
 
                 if (req.body.remember == 1) {
-                    res.cookie('id', rows[0].id, {
+                    res.cookie('mid', rows[0].id, {
                         maxAge: 60 * 60 * 1000,
                         httpOnly: true,
                         path: '/'

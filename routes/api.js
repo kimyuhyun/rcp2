@@ -320,7 +320,7 @@ router.get('/', setLog, async function(req, res, next) {
     //     arr = utils.nvl(data);
     // });
     //
-    // res.send('api');
+    res.send('api');
 });
 
 
