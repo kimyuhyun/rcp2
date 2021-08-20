@@ -195,7 +195,7 @@ router.get('/liveuser', userChecking, async function(req, res, next) {
 });
 
 router.post('/liveuser', userChecking, function(req, res, next) {
-    var arr = new Array();
+    var arr = [];
 
     fs.readdir('./liveuser', async function(err, filelist) {
         for (file of filelist) {
@@ -203,20 +203,26 @@ router.post('/liveuser', userChecking, function(req, res, next) {
                 fs.readFile('./liveuser/' + file, 'utf8', function(err, data) {
                     resolve(data);
                 });
-            }).then(function(data) {
+            }).then(async function(data) {
                 try {
                     if (file != 'dummy') {
-                        var tmp = data.split('|S|');
-                        console.log(data);
-                        moment.tz.setDefault("Asia/Seoul");
-                        var connTime = moment.unix(tmp[0] / 1000).format('YYYY-MM-DD HH:mm');
-                        var minDiff = moment.duration(moment(new Date()).diff(moment(connTime))).asMinutes();
-                        if (minDiff > 4) {
-                            console.log(minDiff);
-                            fs.unlink('./liveuser/' + file, function(err) {
-                                console.log(err);
-                            });
-                        }
+                        await new Promise(function(resolve, reject) {
+                            var tmp = data.split('|S|');
+                            console.log(data);
+                            moment.tz.setDefault("Asia/Seoul");
+                            var connTime = moment.unix(tmp[0] / 1000).format('YYYY-MM-DD HH:mm');
+                            var minDiff = moment.duration(moment(new Date()).diff(moment(connTime))).asMinutes();
+                            if (minDiff > 4) {
+                                console.log(minDiff);
+                                fs.unlink('./liveuser/' + file, function(err) {
+                                    console.log(err);
+                                    resolve();
+                                });
+                            } else {
+                                resolve();
+                            }
+                        }).then();
+
                         arr.push({
                             'id': file,
                             'url': tmp[1],
