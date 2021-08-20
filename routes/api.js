@@ -238,40 +238,6 @@ router.get('/get_fav/:id', setLog, async function(req, res, next) {
     res.send(arr);
 });
 
-
-router.get('/get_search/:q/:page', setLog, async function(req, res, next) {
-    const page = req.params.page * 20;
-    const q = '%' + req.params.q + '%';
-    var arr = [];
-
-    await new Promise(function(resolve, reject) {
-        const sql = `
-            SELECT
-            A.idx,
-            A.title,
-            A.filename0,
-            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
-            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
-            FROM
-            RCP_tbl as A
-            WHERE (title LIKE ? OR jaelyo LIKE ?)
-            ORDER BY A.title ASC
-            LIMIT ${page}, 20
-            `;
-        db.query(sql, [q, q], function(err, rows, fields) {
-            if (!err) {
-                resolve(rows);
-            } else {
-                console.log(err);
-                resolve(err);
-            }
-        });
-    }).then(function(data) {
-        arr = utils.nvl(data);
-    });
-    res.send(arr);
-});
-
 router.get('/get_categorys', setLog, async function(req, res, next) {
 
     var arr = {};
@@ -305,7 +271,7 @@ router.get('/get_categorys', setLog, async function(req, res, next) {
 });
 
 router.get('/get_list/:page', setLog, async function(req, res, next) {
-    const { cate1, cate2, cate3, cate4, cate5 } = req.query;
+    const { writer_idx, q, cate1, cate2, cate3, cate4, cate5 } = req.query;
     const page = req.params.page * 20;
 
     var arr = [];
@@ -323,6 +289,19 @@ router.get('/get_list/:page', setLog, async function(req, res, next) {
         `;
 
         var records = [];
+
+        if (writer_idx != '') {
+            sql += ' AND writer_idx = ? ';
+            records.push(writer_idx);
+        }
+
+        if (q != '') {
+            const query = '%' + q + '%';
+            sql += ' AND (title LIKE ? OR jaelyo LIKE ?) ';
+            records.push(query);
+            records.push(query);
+        }
+
         if (cate1 != '') {
             sql += ' AND cate1 = ? ';
             records.push(cate1);
