@@ -162,7 +162,7 @@ router.get('/detail/:id/:idx', setLog, async function(req, res, next) {
             WHERE A.idx = ?
         `;
         db.query(sql, [id, idx], function(err, rows, fields) {
-            console.log(rows);
+            // console.log(rows);
             if (!err) {
                 resolve(rows[0]);
             } else {
