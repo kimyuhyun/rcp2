@@ -345,6 +345,13 @@ router.get('/get_list/:page', setLog, async function(req, res, next) {
     res.send(arr);
 });
 
+router.get('/get_notice', setLog, async function(req, res, next) {
+    res.send({
+        notice: '',
+        link: '',
+    });
+});
+
 router.get('/', setLog, async function(req, res, next) {
 
     // var arr = [];
