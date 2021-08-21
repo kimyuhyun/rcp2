@@ -89,6 +89,56 @@ router.get('/home', setLog, async function(req, res, next) {
             (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
             (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
             FROM RCP_tbl as A
+            WHERE A.cate1 = '메인반찬'
+            ORDER BY RAND() LIMIT 0, 10
+        `;
+
+        db.query(sql, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(function(data) {
+        arr.main_banchan = utils.nvl(data);
+    });
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM RCP_tbl as A
+            WHERE A.cate1 = '밑반찬' 
+            ORDER BY RAND() LIMIT 0, 10
+        `;
+
+        db.query(sql, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(function(data) {
+        arr.mit_banchan = utils.nvl(data);
+    });
+
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+            FROM RCP_tbl as A
             WHERE A.writer_idx = 4
             ORDER BY RAND() LIMIT 0, 10
         `;
