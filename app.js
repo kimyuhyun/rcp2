@@ -1,5 +1,3 @@
-process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
-
 var createError = require('http-errors');
 var express = require('express');
 var session = require('express-session');
@@ -67,8 +65,6 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-    // console.log('ENV', process.env.NODE_ENV);
-    // console.log('ENV', req.app.get('env'));
 
     // set locals, only providing error in development
     res.locals.message = err.message;

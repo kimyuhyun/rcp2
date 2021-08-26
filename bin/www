@@ -44,7 +44,9 @@ server.listen(port, '0.0.0.0', function() {
             }
         });
     }
-    console.log(result);
+    process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
+    console.log(result, process.env.NODE_ENV);
+
 });
 
 server.on('error', onError);
