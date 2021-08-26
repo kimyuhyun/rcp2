@@ -8,6 +8,13 @@ const moment = require('moment');
 
 
 async function setLog(req, res, next) {
+    //토큰 검증 한다!!!
+    if (req.query.token != 'kkyyhh') {
+        res.send('누구냐넌?');
+        return;
+    }
+    //
+    
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     var rows;
     await new Promise(function(resolve, reject) {
