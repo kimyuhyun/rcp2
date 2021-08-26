@@ -223,17 +223,18 @@ router.post('/liveuser', userChecking, function(req, res, next) {
                             }
                         }).then();
 
-                        arr.push({
-                            'id': file,
-                            'url': tmp[1],
-                            'date': connTime,
-                        });
+                        if (tmp[1]) {
+                            arr.push({
+                                'id': file,
+                                'url': tmp[1],
+                                'date': connTime,
+                            });
+                        }
                     }
                     console.log(arr);
                 } catch (e) {
                     console.log(e);
                 }
-
             });
         }
         var result = {
