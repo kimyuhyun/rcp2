@@ -496,10 +496,12 @@ block content
         	//- 		$("#filename"+i+"_x").hide();
         	//- 	}
         	//- });
-            eval("w2ui.form.record.filename"+i+"='';");
-            $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
-            $("#filename"+i+"_img").attr("onclick", "");
-            $("#filename"+i+"_x").hide();
+            if (confirm("삭제하시겠습니까?")) {
+                eval("w2ui.form.record.filename"+i+"='';");
+                $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
+                $("#filename"+i+"_img").attr("onclick", "");
+                $("#filename"+i+"_x").hide();
+            }
         }
         function setJaelyoText(txt) {
             var element     =         document.getElementById('jaelyo');
