@@ -62,8 +62,8 @@ router.get('/', setLog, async function(req, res, next) {
     //             resolve(err);
     //         }
     //     });
-    // }).then(function(data) {
-    //     arr = utils.nvl(data);
+    // }).then(async function(data) {
+    //     arr = await utils.nvl(data);
     // });
     //
     // res.send('api');

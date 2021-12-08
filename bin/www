@@ -12,7 +12,7 @@ var db = require('../db');
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 /**
@@ -33,19 +33,18 @@ server.listen(port, '0.0.0.0', function() {
     }, 60000);
 
     var os = require('os');
-    var ifaces = os.networkInterfaces();
-    var result = '';
-    for (var dev in ifaces) {
-        var alias = 0;
-        ifaces[dev].forEach(function(details) {
-            if (details.family == 'IPv4' && details.internal === false) {
-                result = details.address;
-                ++alias;
-            }
-        });
-    }
-    process.env.NODE_ENV = (process.env.NODE_ENV && (process.env.NODE_ENV).trim().toLowerCase() == 'production') ? 'production' : 'development';
-    console.log(result, process.env.NODE_ENV);
+     var ifaces = os.networkInterfaces();
+     var result = '';
+     for (var dev in ifaces) {
+         var alias = 0;
+         ifaces[dev].forEach(function(details) {
+             if (details.family == 'IPv4' && details.internal === false) {
+                 result = details.address;
+                 ++alias;
+             }
+         });
+     }
+     console.log(result);
 
 });
 

@@ -6,9 +6,6 @@ const db = require('../db');
 const utils = require('../Utils');
 const moment = require('moment');
 const axios = require('axios');
-const webdriver = require('selenium-webdriver');
-const { By, Key } = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
 const cheerio = require('cheerio');
 
 router.get('/', async function(req, res, next) {
@@ -86,16 +83,6 @@ var keyArr = ['iWjOVquoXGA','HP3mG703WGA','fMwidi9nVf0','dO0vBa1Ftf0','gW43UFgNs
 'G9NZbbCYiD0','kN3HNTTridA','JBI8Au9UhdA','kXUK0Lh6HdA','eYuqpWvFED0','EVWKmlhQDD0','K7xTQy35DdA','eNLz55WhbD0','HLDcwyXI7dA','JGi8q6ev5dA'];
 
 
-
-
-
-const service = new chrome.ServiceBuilder('./chromedriver_mac').build();
-chrome.setDefaultService(service);
-// const opts = new chrome.Options().addArguments(['user-agent="Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X)"']);
-const driver = new webdriver.Builder().forBrowser('chrome')
-                        .setChromeOptions(new chrome.Options().headless().windowSize({ width: 640, height: 1480 }))
-                        // .setChromeOptions(new chrome.Options().windowSize({ width: 640, height: 1080 }))
-                        .build();
 
 router.get('/z', async function(req, res, next) {
 
