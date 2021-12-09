@@ -76,8 +76,8 @@ router.get('/home', setLog, async function(req, res, next) {
                 resolve(err);
             }
         });
-    }).then(function(data) {
-        arr.recommend = utils.nvl(data);
+    }).then(async function(data) {
+        arr.recommend = await utils.nvl(data);
     });
 
     await new Promise(function(resolve, reject) {
@@ -101,8 +101,8 @@ router.get('/home', setLog, async function(req, res, next) {
                 resolve(err);
             }
         });
-    }).then(function(data) {
-        arr.main_banchan = utils.nvl(data);
+    }).then(async function(data) {
+        arr.main_banchan = await utils.nvl(data);
     });
 
     await new Promise(function(resolve, reject) {
@@ -126,8 +126,8 @@ router.get('/home', setLog, async function(req, res, next) {
                 resolve(err);
             }
         });
-    }).then(function(data) {
-        arr.mit_banchan = utils.nvl(data);
+    }).then(async function(data) {
+        arr.mit_banchan = await utils.nvl(data);
     });
 
     await new Promise(function(resolve, reject) {
@@ -150,8 +150,8 @@ router.get('/home', setLog, async function(req, res, next) {
                 resolve(err);
             }
         });
-    }).then(function(data) {
-        arr.soomi = utils.nvl(data);
+    }).then(async function(data) {
+        arr.soomi = await utils.nvl(data);
     });
 
     await new Promise(function(resolve, reject) {
@@ -174,8 +174,8 @@ router.get('/home', setLog, async function(req, res, next) {
                 resolve(err);
             }
         });
-    }).then(function(data) {
-        arr.zipbab = utils.nvl(data);
+    }).then(async function(data) {
+        arr.zipbab = await utils.nvl(data);
     });
 
     res.send(arr);
@@ -227,8 +227,8 @@ router.get('/detail/:id/:idx', setLog, async function(req, res, next) {
                 console.log(err);
             }
         });
-    }).then(function(data) {
-        obj = utils.nvl(data);
+    }).then(async function(data) {
+        obj = await utils.nvl(data);
     });
     res.send(obj);
 });
@@ -289,8 +289,8 @@ router.get('/get_fav/:id', setLog, async function(req, res, next) {
                 console.log(err);
             }
         });
-    }).then(function(data) {
-        arr = utils.nvl(data);
+    }).then(async function(data) {
+        arr = await utils.nvl(data);
     });
 
     res.send(arr);
@@ -396,8 +396,8 @@ router.get('/get_list/:page', setLog, async function(req, res, next) {
                 resolve(err);
             }
         });
-    }).then(function(data) {
-        arr = utils.nvl(data);
+    }).then(async function(data) {
+        arr = await utils.nvl(data);
     });
 
     res.send(arr);
@@ -443,8 +443,8 @@ router.get('/', setLog, async function(req, res, next) {
     //             resolve(err);
     //         }
     //     });
-    // }).then(function(data) {
-    //     arr = utils.nvl(data);
+    // }).then(async function(data) {
+    //     arr = await utils.nvl(data);
     // });
     //
     res.send('api');

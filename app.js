@@ -14,7 +14,7 @@ var crudRouter = require('./routes/crud');
 var analyzerRouter = require('./routes/analyzer');
 var apiRouter = require('./routes/api');
 var rcpRouter = require('./routes/rcp');
-var tmpRouter = require('./routes/tmp');
+
 
 var app = express();
 
@@ -54,7 +54,7 @@ app.use('/crud', crudRouter);
 app.use('/analyzer', analyzerRouter);
 app.use('/api', apiRouter);
 app.use('/rcp', rcpRouter);
-app.use('/tmp', tmpRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
