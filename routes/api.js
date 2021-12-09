@@ -114,7 +114,7 @@ router.get('/home', setLog, async function(req, res, next) {
             (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
             (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
             FROM RCP_tbl as A
-            WHERE A.cate1 = '밑반찬' 
+            WHERE A.cate1 = '밑반찬'
             ORDER BY RAND() LIMIT 0, 10
         `;
 
@@ -400,6 +400,25 @@ router.get('/get_list/:page', setLog, async function(req, res, next) {
         arr = utils.nvl(data);
     });
 
+    res.send(arr);
+});
+
+router.get('/get_bloger_list', setLog, async function(req, res, next) {
+    var arr = [];
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT idx, name1, thumb FROM BLOGER_tbl ORDER BY modified DESC`;
+        db.query(sql, function(err, rows, fields) {
+            console.log(rows);
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(async function(data) {
+        arr = await utils.nvl(data);
+    });
     res.send(arr);
 });
 

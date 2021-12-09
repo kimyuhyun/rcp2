@@ -14,7 +14,7 @@ async function setLog(req, res, next) {
         return;
     }
     //
-    
+
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     var rows;
     await new Promise(function(resolve, reject) {
@@ -57,7 +57,7 @@ router.get('/', setLog, function(req, res, next) {
     const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
     res.render('index', {
-        title: 'MVP',
+        title: 'RCP2',
         session: ip,
         mode: process.env.NODE_ENV,
     });
