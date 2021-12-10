@@ -73,6 +73,7 @@ router.get('/graph1', userChecking, async function(req, res, next) {
         });
         //
     }
+    console.log(arr);
     res.render('./admin/graph1', {
         rows: arr.reverse()
     });

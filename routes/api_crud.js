@@ -8,8 +8,11 @@ const axios = require('axios');
 
 
 function tokenChecking(req, res, next) {
-    //여기서 토큰 체크!
-
+    //토큰 검증 한다!!!
+    if (req.query.token != 'kkyyhh') {
+        res.send('Not Bad');
+        return;
+    }
     //
     next();
 }

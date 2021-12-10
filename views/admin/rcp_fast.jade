@@ -9,12 +9,12 @@ block content
         
 
     div(class='row m-0')
+        div(class='offset-md-2 col-12 col-md-4 p-0 ')
+            div(id='grid' style='width: 100%; height: 860px;')
+
+
         div(class='col-12 col-md-4 p-0')
-            div(id='grid' style='width: 100%; height: 873px; border: 0px;')
-
-
-        div(class='col-12 col-md-8 p-0')
-            div(id='form' style='border-top: 0px; border-right: 0px;')
+            div(id='form')
                 div(class='w2ui-page page-0')
                     div(class='d-flex flex-row')
                         div(class='w2ui-field w2ui-span2 flex-fill')
@@ -28,7 +28,7 @@ block content
                                 input(name='writer_idx')
                                 
                                 
-                    div(class='d-flex flex-row')
+                    div(class='d-flex flex-column')
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 종류별
                             div
@@ -54,66 +54,7 @@ block content
                             label 테마별
                             div
                                 input(name='cate5')
-                                
-                    div(class='d-flex flex-row')
-                        div(class='flex-column flex-fill')
-                            div(class='w2ui-field w2ui-span2')
-                                label 재료
-                                div
-                                    textarea(id='jaelyo' name='jaelyo', rows='11', style='font-size: 14px;')
-                                    button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
-                            
-                            
-
-                    div(class='d-flex flex-row mt-3')
-                        div(class='flex-column flex-fill')
-                            - var title = '';
-                            - for (var i=0;i<=4;i++)
-                                if i == 0
-                                    - title = '대표사진'
-                                else
-                                    - title = '순서' + i
-                                div(class='w2ui-field w2ui-span2')
-                                    label #{title}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
-                                    
-                        div(class='flex-column flex-fill')
-                            - for (var i=5;i<=9;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
-                                        
-                        div(class='flex-column flex-fill')
-                            - for (var i=10;i<=14;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
-                                        
-                        div(class='flex-column flex-fill')
-                            - for (var i=15;i<=19;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
+                
                     
 
                 div(class='w2ui-buttons')
@@ -159,8 +100,8 @@ block content
                     remove: '/crud/remove?table=' + table,                    
                 },
                 recid: 'idx',
-                limit: 20,
-                recordHeight: 40,
+                limit: 40,
+                recordHeight: 20,
                 autoLoad: false,
                 name: 'grid',
                 show: {
@@ -253,13 +194,6 @@ block content
                 ],
                 columns: [
                     { field: 'idx', caption: '번호', size: '40px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
-                    { field: 'filename0', caption: '썸네일', size: '50px', sortable: true, resizable: true, style: 'padding: 0px;',	//세팅 해줘야함
-                        render: function(record) {
-                            if (record.filename0 != null && record.filename0 != '') {
-                                return '<img src="' + record.filename0 + '" style="width: 50px; height: 40px;" />';
-                            }
-                        }
-                    },
                     { field: 'title', caption: '제목', size: '100%', min: 150, sortable: true, resizable: true, attr: 'align=left' },	//세팅 해줘야함
                     { field: 'cate1', caption: '종류별', size: '50px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
                     { field: 'cate2', caption: '상황별', size: '50px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
@@ -272,34 +206,12 @@ block content
                 name: 'form',
                 fields: [
                     { field: 'title', type: 'text', required: true },	//세팅 해줘야함
-                    { field: 'jaelyo', type: 'textarea', required: true },	//세팅 해줘야함
                     { field: 'writer_idx', type: 'list', required: true },	//세팅 해줘야함
                     { field: 'cate1', type: 'list', required: false },   //세팅 해줘야함
                     { field: 'cate2', type: 'list', required: false },	//세팅 해줘야함
                     { field: 'cate3', type: 'list', required: false },	//세팅 해줘야함
                     { field: 'cate4', type: 'list', required: false },	//세팅 해줘야함
                     { field: 'cate5', type: 'list', required: false },	//세팅 해줘야함
-                    
-                    { field: 'memo0', type: 'textarea', required: false },
-                    { field: 'memo1', type: 'textarea', required: false },
-                    { field: 'memo2', type: 'textarea', required: false },
-                    { field: 'memo3', type: 'textarea', required: false },
-                    { field: 'memo4', type: 'textarea', required: false },
-                    { field: 'memo5', type: 'textarea', required: false },
-                    { field: 'memo6', type: 'textarea', required: false },
-                    { field: 'memo7', type: 'textarea', required: false },
-                    { field: 'memo8', type: 'textarea', required: false },
-                    { field: 'memo9', type: 'textarea', required: false },
-                    { field: 'memo10', type: 'textarea', required: false },
-                    { field: 'memo11', type: 'textarea', required: false },
-                    { field: 'memo12', type: 'textarea', required: false },
-                    { field: 'memo13', type: 'textarea', required: false },
-                    { field: 'memo14', type: 'textarea', required: false },
-                    { field: 'memo15', type: 'textarea', required: false },
-                    { field: 'memo16', type: 'textarea', required: false },
-                    { field: 'memo17', type: 'textarea', required: false },
-                    { field: 'memo18', type: 'textarea', required: false },
-                    { field: 'memo19', type: 'textarea', required: false },
                 ],
                 actions: {
                     reset: function () {
@@ -334,7 +246,7 @@ block content
                         axios.post('/crud/write', formData).then(function(res) {
                             console.dir(res.data);
                             $("#save").text("입력");
-                            w2alert(res.data.msg);
+                            //- w2alert(res.data.msg);
                             if (res.data.code == 1) {
                                 setTimeout(function() {
                                     w2ui.grid.reload();

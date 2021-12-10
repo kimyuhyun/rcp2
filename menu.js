@@ -35,6 +35,10 @@ var menu = [{
                 "link": "/admin/page/rcp"
             },
             {
+                "title": "레시피(빠른)",
+                "link": "/admin/page/rcp_fast"
+            },
+            {
                 "title": "블로거 등록",
                 "link": "/admin/page/bloger"
             },
