@@ -9,7 +9,7 @@ const moment = require('moment');
 async function setLog(req, res, next) {
     //토큰 검증 한다!!!
     if (req.query.token != 'kkyyhh') {
-        res.send('누구냐넌?');
+        res.send('Not Bad');
         return;
     }
     //
@@ -421,6 +421,44 @@ router.get('/get_bloger_list', setLog, async function(req, res, next) {
     });
     res.send(arr);
 });
+
+router.get('/get_bloger_and_category_list', setLog, async function(req, res, next) {
+    var arr = [];
+
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT idx, name1, true as is_cate FROM CATEGORYS_tbl WHERE gbn = 'cate1' ORDER BY sort1 ASC`;
+        db.query(sql, function(err, rows, fields) {
+            console.log(rows);
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(async function(data) {
+        arr = await utils.nvl(data);
+    });
+
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT idx, name1, false as is_cate FROM BLOGER_tbl ORDER BY modified DESC`;
+        db.query(sql, function(err, rows, fields) {
+            console.log(rows);
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(async function(data) {
+        for (obj of await utils.nvl(data)) {
+            arr.push(obj);
+        }
+    });
+    res.send(arr);
+});
+
 
 router.get('/get_notice', setLog, async function(req, res, next) {
     res.send({
