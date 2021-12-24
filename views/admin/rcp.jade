@@ -80,7 +80,7 @@ block content
                                             label(for='file-input#{i}')
                                                 img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
                                             img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
+                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
                                     
                         div(class='flex-column flex-fill')
                             - for (var i=5;i<=9;i++)
@@ -91,7 +91,7 @@ block content
                                             label(for='file-input#{i}')
                                                 img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
                                             img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
+                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
                                         
                         div(class='flex-column flex-fill')
                             - for (var i=10;i<=14;i++)
@@ -102,7 +102,7 @@ block content
                                             label(for='file-input#{i}')
                                                 img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
                                             img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
+                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
                                         
                         div(class='flex-column flex-fill')
                             - for (var i=15;i<=19;i++)
@@ -113,7 +113,7 @@ block content
                                             label(for='file-input#{i}')
                                                 img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
                                             img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(name='memo#{i}', style='width: 100%; height: 80px;')
+                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
                     
 
                 div(class='w2ui-buttons')
@@ -125,7 +125,7 @@ block content
                 input(type="hidden", name="jaelyo")
                 
                 
-            img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:99; width: 500px; height: 500px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
+            img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:99; width: 600px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
 
             div(id='jaelyo_helper' class='shadow' style='position: absolute; z-index:99; background: #fff; display: none; font-size: 10px;')
                 div(class='d-flex flex-row')
@@ -195,7 +195,7 @@ block content
                                 
                             setTimeout(async function() {
                                 await new Promise(function(resolve, reject) {
-                                    getcategorys();
+                                    getCategorys();
                                     resolve();
                                 });
                                 $("input[name='cate1']").w2field().set({ id: form.record.cate1, text: form.record.cate1 });
@@ -228,7 +228,7 @@ block content
         							$("#filename"+i+"_img").attr("src", fileLink);
         							$("#filename"+i+"_img").attr("onclick", show_image);
                                     
-                                    
+                                    $("#memo"+i).attr("onfocus", show_image);
                                     
                                     
         							$("#filename"+i+"_x").show();
@@ -398,7 +398,7 @@ block content
                         cate5.push(obj.name1);
                     }
                 }                
-                getcategorys();
+                getCategorys();
                                 
             }).catch(function(err){
                 console.log(err);
@@ -418,7 +418,7 @@ block content
                 console.log(err);
             });
         });
-        function getcategorys() {
+        function getCategorys() {
             $("input[name='cate1']").w2field('list', { items: cate1 });
             $("input[name='cate2']").w2field('list', { items: cate2 });
             $("input[name='cate3']").w2field('list', { items: cate3 });
@@ -439,7 +439,7 @@ block content
         }
         function formClear() {
             setTimeout(function() {
-                getcategorys();
+                getCategorys();
                 getBlogers();
             }, 200);
             
