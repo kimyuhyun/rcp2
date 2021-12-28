@@ -14,6 +14,7 @@ var crudRouter = require('./routes/crud');
 var analyzerRouter = require('./routes/analyzer');
 var apiRouter = require('./routes/api');
 var rcpRouter = require('./routes/rcp');
+var jaelyoRouter = require('./routes/jaelyo');
 
 
 var app = express();
@@ -52,6 +53,7 @@ app.use('/crud', crudRouter);
 app.use('/analyzer', analyzerRouter);
 app.use('/api', apiRouter);
 app.use('/rcp', rcpRouter);
+app.use('/jaelyo', jaelyoRouter);
 
 
 // catch 404 and forward to error handler

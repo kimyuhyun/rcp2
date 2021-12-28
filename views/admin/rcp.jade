@@ -172,7 +172,7 @@ block content
                 sortData: [{ field: 'idx', direction: 'DESC' }],
                 multiSelect: true,
                 multiSearch: true,
-                onError:function(e){
+                onError:function(e) {
                     console.log(e.xhr.responseText);
                 },
                 onClick: function(event) {
@@ -249,6 +249,7 @@ block content
                     }
                 },
                 searches: [
+                    { field: 'idx', caption: '번호', type: 'int' },			//세팅 해줘야함
                     { field: 'title', caption: '제목', type: 'text' },			//세팅 해줘야함
                 ],
                 columns: [
