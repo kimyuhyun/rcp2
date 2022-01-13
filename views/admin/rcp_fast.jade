@@ -9,12 +9,12 @@ block content
         
 
     div(class='row m-0')
-        div(class='offset-md-2 col-12 col-md-4 p-0 ')
+        div(class='offset-lg-2 col-6 col-lg-4 p-0 ')
             div(id='grid' style='width: 100%; height: 860px;')
 
 
-        div(class='col-12 col-md-4 p-0')
-            div(id='form')
+        div(class='col-6 col-lg-4 p-0')
+            div(id='form', style='height: 800px;')
                 div(class='w2ui-page page-0')
                     div(class='d-flex flex-row')
                         div(class='w2ui-field w2ui-span2 flex-fill')
@@ -31,29 +31,23 @@ block content
                     div(class='d-flex flex-column')
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 종류별
-                            div
-                                input(name='cate1')
+                            div(id='cate1_box', class='d-flex flex-wrap align-items-center')
                                 
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 상황별
-                            div
-                                input(name='cate2')
-                    
+                            div(id='cate2_box', class='d-flex flex-wrap align-items-center')
                     
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 재료별
-                            div
-                                input(name='cate3')
+                            div(id='cate3_box', class='d-flex flex-wrap align-items-center')
                                 
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 방법별
-                            div
-                                input(name='cate4')
+                            div(id='cate4_box', class='d-flex flex-wrap align-items-center')
                                 
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 테마별
-                            div
-                                input(name='cate5')
+                            div(id='cate5_box', class='d-flex flex-wrap align-items-center')
                 
                     
 
@@ -120,68 +114,30 @@ block content
                     if (event.column == null) {
                         return;
                     }
-
                     var grid = this;
-                    var form = w2ui.form;
                     event.onComplete = function () {
                         var sel = grid.getSelection();
                         if (sel.length == 1) {
-                            form.recid = sel[0];
-                            form.clear();
-                            form.record = $.extend(true, {}, grid.get(sel[0]));
-                            
-                            //- grid.selectNone();
+                            w2ui.form.recid = sel[0];
+                            w2ui.form.clear();
+                            w2ui.form.record = $.extend(true, {}, grid.get(sel[0]));
                                                         
-                            console.log(form.record);
-                                
-                            setTimeout(async function() {
-                                await new Promise(function(resolve, reject) {
-                                    getcategorys();
-                                    resolve();
-                                });
-                                $("input[name='cate1']").w2field().set({ id: form.record.cate1, text: form.record.cate1 });
-                                $("input[name='cate2']").w2field().set({ id: form.record.cate2, text: form.record.cate2 });
-                                $("input[name='cate3']").w2field().set({ id: form.record.cate3, text: form.record.cate3 });
-                                $("input[name='cate4']").w2field().set({ id: form.record.cate4, text: form.record.cate4 });
-                                $("input[name='cate5']").w2field().set({ id: form.record.cate5, text: form.record.cate5 });
-                                
-                                $("input[name='cate5']").w2field().set({ id: 4, text: '추천'});
-                            }, 300);
+                            if (w2ui.form.record.cate5 == '') {
+                                w2ui.form.record.cate5 = '추천';
+                            }
                             
                             setTimeout(async function() {
                                 var blogerName = '';
                                 await new Promise(function(resolve, reject) {
-                                    blogerName = getBlogers(form.record.writer_idx);
+                                    blogerName = getBlogers(w2ui.form.record.writer_idx);
                                     resolve(blogerName);
                                 }).then(data => {
                                     blogerName = data;
                                 });                                
-                                $("input[name='writer_idx']").w2field().set({ id: form.record.writer_idx, text: blogerName });
+                                $("input[name='writer_idx']").w2field().set({ id: w2ui.form.record.writer_idx, text: blogerName });
                             }, 400);
                             
-                            
-                            for (var i=0;i<=19;i++) {
-        						eval("var fileLink = form.record.filename"+i);
-        						if (fileLink != '') {
-                                    
-                                    var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
-                                    
-        							$("#filename"+i+"_img").attr("src", fileLink);
-        							$("#filename"+i+"_img").attr("onclick", show_image);
-                                    
-                                    
-                                    
-                                    
-        							$("#filename"+i+"_x").show();
-        						} else {
-        							$("#filename"+i).val("");
-        							$("#filename"+i+"_img").attr("src", "/images/no-img2.png");
-        							$("#filename"+i+"_img").attr("onclick", "");
-        							$("#filename"+i+"_x").hide();
-        						}
-        					}
-                            
-                            form.refresh();
+                            w2ui.form.refresh();
                             $("#save").text("수정");
                         } else {
                             formClear();
@@ -207,11 +163,11 @@ block content
                 fields: [
                     { field: 'title', type: 'text', required: true },	//세팅 해줘야함
                     { field: 'writer_idx', type: 'list', required: true },	//세팅 해줘야함
-                    { field: 'cate1', type: 'list', required: false },   //세팅 해줘야함
-                    { field: 'cate2', type: 'list', required: false },	//세팅 해줘야함
-                    { field: 'cate3', type: 'list', required: false },	//세팅 해줘야함
-                    { field: 'cate4', type: 'list', required: false },	//세팅 해줘야함
-                    { field: 'cate5', type: 'list', required: false },	//세팅 해줘야함
+                    { field: 'cate1', type: 'radio', required: false },   //세팅 해줘야함
+                    { field: 'cate2', type: 'radio', required: false },	//세팅 해줘야함
+                    { field: 'cate3', type: 'radio', required: false },	//세팅 해줘야함
+                    { field: 'cate4', type: 'radio', required: false },	//세팅 해줘야함
+                    { field: 'cate5', type: 'radio', required: false },	//세팅 해줘야함
                 ],
                 actions: {
                     reset: function () {
@@ -225,13 +181,7 @@ block content
                         }
 
                         //- 세팅해줘야함.
-                        this.record.table = table;
-                        this.record.cate1 = this.record.cate1['text'];
-                        this.record.cate2 = this.record.cate2['text'];
-                        this.record.cate3 = this.record.cate3['text'];
-                        this.record.cate4 = this.record.cate4['text'];
-                        this.record.cate5 = this.record.cate5['text'];
-                        
+                        this.record.table = table;                        
                         this.record.writer_idx = this.record.writer_idx['id'];
                         //
                         
@@ -297,21 +247,16 @@ block content
             
             //카테고리 불러오기
             axios.get('/crud/iterator?table=CATEGORYS_tbl&sort1=sort1 ASC').then(function(res) {
+                var html = '';
                 for (obj of res.data) {
-                    if (obj.gbn == 'cate1') {
-                        cate1.push(obj.name1);
-                    } else if (obj.gbn == 'cate2') {
-                        cate2.push(obj.name1);
-                    } else if (obj.gbn == 'cate3') {
-                        cate3.push(obj.name1);
-                    } else if (obj.gbn == 'cate4') {
-                        cate4.push(obj.name1);
-                    } else if (obj.gbn == 'cate5') {
-                        cate5.push(obj.name1);
-                    }
+                    html = `
+                        <div class="d-flex flex-row align-items-center me-2 mb-1" style="width: 90px;">
+                            <input type="radio" name="${obj.gbn}" id="${obj.idx}" value="${obj.name1}" class="me-1">
+                            <label for="${obj.idx}" style='cursor: pointer;'>${obj.name1}</label>
+                        </div>
+                    `;
+                    $('#' + obj.gbn + '_box').append(html);
                 }                
-                getcategorys();
-                                
             }).catch(function(err){
                 console.log(err);
             });
@@ -330,13 +275,7 @@ block content
                 console.log(err);
             });
         });
-        function getcategorys() {
-            $("input[name='cate1']").w2field('list', { items: cate1 });
-            $("input[name='cate2']").w2field('list', { items: cate2 });
-            $("input[name='cate3']").w2field('list', { items: cate3 });
-            $("input[name='cate4']").w2field('list', { items: cate4 });
-            $("input[name='cate5']").w2field('list', { items: cate5 });
-        }
+        
         function getBlogers(id) {
             $("input[name='writer_idx']").w2field('list', { items: bloger });
             
@@ -351,7 +290,6 @@ block content
         }
         function formClear() {
             setTimeout(function() {
-                getcategorys();
                 getBlogers();
             }, 200);
             
