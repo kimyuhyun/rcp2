@@ -114,6 +114,17 @@ block content
                                                 img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
                                             img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
                                         textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+                                        
+                        div(class='flex-column flex-fill')
+                            - for (var i=20;i<=20;i++)
+                                div(class='w2ui-field w2ui-span2')
+                                    label 순서#{i}
+                                    div(class='d-flex flex-row')
+                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                                            label(for='file-input#{i}')
+                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
                     
 
                 div(class='w2ui-buttons')
@@ -219,7 +230,7 @@ block content
                             }, 400);
                             
                             
-                            for (var i=0;i<=19;i++) {
+                            for (var i=0;i<=20;i++) {
         						eval("var fileLink = form.record.filename"+i);
         						if (fileLink != '') {
                                     
@@ -301,6 +312,7 @@ block content
                     { field: 'memo17', type: 'textarea', required: false },
                     { field: 'memo18', type: 'textarea', required: false },
                     { field: 'memo19', type: 'textarea', required: false },
+                    { field: 'memo20', type: 'textarea', required: false },
                 ],
                 actions: {
                     reset: function () {
@@ -378,7 +390,7 @@ block content
             $('#jaelyo').mousedown(function(event) {
                 if (event.which == 1) {
                     $("#jaelyo_helper").css("top", event.pageY);
-                    $("#jaelyo_helper").css("left", event.pageX + 20);
+                    $("#jaelyo_helper").css("left", event.pageX + 40);
                     
                     $("#jaelyo_helper").show();
                 }
@@ -446,7 +458,7 @@ block content
             
         	$("#jaelyo").val("");
         	w2ui.form.clear();
-        	for (var i=0;i<=19;i++) {
+        	for (var i=0;i<=20;i++) {
         		$("#filename"+i).val("");
         		$("#filename"+i+"_img").attr("src", "/images/no-img2.png");
         		$("#filename"+i+"_img").attr("onclick", "");
