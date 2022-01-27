@@ -6,11 +6,11 @@ block content
         button(class="w2ui-btn w2ui-btn-blue" onclick="$('#save').trigger('click');") 저장
         br
         button(class="w2ui-btn mt-1" onclick="formClear();") 리셋
-        
+
 
     div(class='row m-0')
         div(class='col-12 col-md-4 p-0')
-            div(id='grid' style='width: 100%; height: 873px; border: 0px;')
+            div(id='grid' style='width: 100%; height: 880px; border: 0px;')
 
 
         div(class='col-12 col-md-8 p-0')
@@ -21,40 +21,40 @@ block content
                             label 음식명
                             div
                                 input(name='title')
-                                
+
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 블로거
                             div
                                 input(name='writer_idx')
-                                
-                                
+
+
                     div(class='d-flex flex-row')
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 종류별
                             div
                                 input(name='cate1')
-                                
+
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 상황별
                             div
                                 input(name='cate2')
-                    
-                    
+
+
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 재료별
                             div
                                 input(name='cate3')
-                                
+
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 방법별
                             div
                                 input(name='cate4')
-                                
+
                         div(class='w2ui-field w2ui-span2 flex-fill')
                             label 테마별
                             div
                                 input(name='cate5')
-                                
+
                     div(class='d-flex flex-row')
                         div(class='flex-column flex-fill')
                             div(class='w2ui-field w2ui-span2')
@@ -62,70 +62,86 @@ block content
                                 div
                                     textarea(id='jaelyo' name='jaelyo', rows='11', style='font-size: 14px;')
                                     button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
-                            
-                            
 
-                    div(class='d-flex flex-row mt-3')
-                        div(class='flex-column flex-fill')
-                            - var title = '';
-                            - for (var i=0;i<=4;i++)
-                                if i == 0
-                                    - title = '대표사진'
-                                else
-                                    - title = '순서' + i
-                                div(class='w2ui-field w2ui-span2')
-                                    label #{title}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
-                                    
-                        div(class='flex-column flex-fill')
-                            - for (var i=5;i<=9;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
-                                        
-                        div(class='flex-column flex-fill')
-                            - for (var i=10;i<=14;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
-                                        
-                        div(class='flex-column flex-fill')
-                            - for (var i=15;i<=19;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
-                                        
-                        div(class='flex-column flex-fill')
-                            - for (var i=20;i<=20;i++)
-                                div(class='w2ui-field w2ui-span2')
-                                    label 순서#{i}
-                                    div(class='d-flex flex-row')
-                                        div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
-                                            label(for='file-input#{i}')
-                                                img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
-                                            img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
-                                        textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
-                    
+
+                    div(class='d-flex flex-wrap mt-3')
+                        - var title = '';
+                        - for (var i=0;i<=20;i++)
+                            if i == 0
+                                - title = '대표사진';
+                            else
+                                - title = '순서' + i;
+                                
+                            div(class='w2ui-field w2ui-span2')
+                                label #{title}
+                                div(class='d-flex flex-row')
+                                    div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                                        label(for='file-input#{i}')
+                                            img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                                        img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                                    textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+
+                    //- div(class='d-flex flex-row mt-3')
+                    //-     div(class='flex-column flex-fill')
+                    //-         - var title = '';
+                    //-         - for (var i=0;i<=4;i++)
+                    //-             if i == 0
+                    //-                 - title = '대표사진'
+                    //-             else
+                    //-                 - title = '순서' + i
+                    //-             div(class='w2ui-field w2ui-span2')
+                    //-                 label #{title}
+                    //-                 div(class='d-flex flex-row')
+                    //-                     div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                    //-                         label(for='file-input#{i}')
+                    //-                             img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                    //-                         img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                    //-                     textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+                    //- 
+                    //-     div(class='flex-column flex-fill')
+                    //-         - for (var i=5;i<=9;i++)
+                    //-             div(class='w2ui-field w2ui-span2')
+                    //-                 label 순서#{i}
+                    //-                 div(class='d-flex flex-row')
+                    //-                     div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                    //-                         label(for='file-input#{i}')
+                    //-                             img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                    //-                         img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                    //-                     textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+                    //- 
+                    //-     div(class='flex-column flex-fill')
+                    //-         - for (var i=10;i<=14;i++)
+                    //-             div(class='w2ui-field w2ui-span2')
+                    //-                 label 순서#{i}
+                    //-                 div(class='d-flex flex-row')
+                    //-                     div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                    //-                         label(for='file-input#{i}')
+                    //-                             img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                    //-                         img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                    //-                     textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+                    //- 
+                    //-     div(class='flex-column flex-fill')
+                    //-         - for (var i=15;i<=19;i++)
+                    //-             div(class='w2ui-field w2ui-span2')
+                    //-                 label 순서#{i}
+                    //-                 div(class='d-flex flex-row')
+                    //-                     div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                    //-                         label(for='file-input#{i}')
+                    //-                             img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                    //-                         img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                    //-                     textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+                    //- 
+                    //-     div(class='flex-column flex-fill')
+                    //-         - for (var i=20;i<=20;i++)
+                    //-             div(class='w2ui-field w2ui-span2')
+                    //-                 label 순서#{i}
+                    //-                 div(class='d-flex flex-row')
+                    //-                     div(class='p-0 me-1', style='position: relative; min-width: 80px; height: 80px;', onDragEnter='dragEnter(#{i}, event)', onDragLeave='dragLeave(#{i}, event)', onDragOver='dragOver(event)', onDrop='drop(#{i}, event)')
+                    //-                         label(for='file-input#{i}')
+                    //-                             img(id='filename#{i}_img', src='/images/no-img2.png' class='img-thumbnail' style='width: 80px; height: 80px;')
+                    //-                         img(id='filename#{i}_x', onclick='deleteImage(#{i})', src='/images/photo_x.png' class='X', style='position: absolute; cursor: pointer; top: -10px; right: -9px; display: none; width: 25px; height: 25px;')
+                    //-                     textarea(id='memo#{i}', name='memo#{i}', style='width: 100%; height: 80px;')
+
 
                 div(class='w2ui-buttons')
                     button(class='w2ui-btn' name='reset') 리셋
@@ -134,8 +150,8 @@ block content
 
             form(name="frmPopup", method="post")
                 input(type="hidden", name="jaelyo")
-                
-                
+
+
             img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:99; width: 600px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
 
             div(id='jaelyo_helper' class='shadow' style='position: absolute; z-index:99; background: #fff; display: none; font-size: 10px;')
@@ -148,12 +164,12 @@ block content
                     button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("대");') 대
                     button(class='btn btn-light btn-sm py-0 me-1' onclick='setJaelyoText("주먹");') 주먹
                     button(class='btn btn-light btn-sm py-0' onclick='setJaelyoText("꼬집");') 꼬집
-                
-                
-                
-                
-                
-                
+
+
+
+
+
+
     //- 들여쓰기 중요함
     script.
         var cate1 = [];
@@ -199,11 +215,11 @@ block content
                             form.recid = sel[0];
                             form.clear();
                             form.record = $.extend(true, {}, grid.get(sel[0]));
-                            
+
                             //- grid.selectNone();
-                                                        
+
                             console.log(form.record);
-                                
+
                             setTimeout(async function() {
                                 await new Promise(function(resolve, reject) {
                                     getCategorys();
@@ -214,10 +230,10 @@ block content
                                 $("input[name='cate3']").w2field().set({ id: form.record.cate3, text: form.record.cate3 });
                                 $("input[name='cate4']").w2field().set({ id: form.record.cate4, text: form.record.cate4 });
                                 $("input[name='cate5']").w2field().set({ id: form.record.cate5, text: form.record.cate5 });
-                                
+
                                 $("input[name='cate5']").w2field().set({ id: 4, text: '추천'});
                             }, 300);
-                            
+
                             setTimeout(async function() {
                                 var blogerName = '';
                                 await new Promise(function(resolve, reject) {
@@ -228,29 +244,29 @@ block content
                                 });                                
                                 $("input[name='writer_idx']").w2field().set({ id: form.record.writer_idx, text: blogerName });
                             }, 400);
-                            
-                            
+
+
                             for (var i=0;i<=20;i++) {
-        						eval("var fileLink = form.record.filename"+i);
-        						if (fileLink != '') {
-                                    
+                                eval("var fileLink = form.record.filename"+i);
+                                if (fileLink != '') {
+
                                     var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
-                                    
-        							$("#filename"+i+"_img").attr("src", fileLink);
-        							$("#filename"+i+"_img").attr("onclick", show_image);
-                                    
+
+                                    $("#filename"+i+"_img").attr("src", fileLink);
+                                    $("#filename"+i+"_img").attr("onclick", show_image);
+
                                     $("#memo"+i).attr("onfocus", show_image);
-                                    
-                                    
-        							$("#filename"+i+"_x").show();
-        						} else {
-        							$("#filename"+i).val("");
-        							$("#filename"+i+"_img").attr("src", "/images/no-img2.png");
-        							$("#filename"+i+"_img").attr("onclick", "");
-        							$("#filename"+i+"_x").hide();
-        						}
-        					}
-                            
+
+
+                                    $("#filename"+i+"_x").show();
+                                } else {
+                                    $("#filename"+i).val("");
+                                    $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
+                                    $("#filename"+i+"_img").attr("onclick", "");
+                                    $("#filename"+i+"_x").hide();
+                                }
+                            }
+
                             form.refresh();
                             $("#save").text("수정");
                         } else {
@@ -291,7 +307,7 @@ block content
                     { field: 'cate3', type: 'list', required: false },	//세팅 해줘야함
                     { field: 'cate4', type: 'list', required: false },	//세팅 해줘야함
                     { field: 'cate5', type: 'list', required: false },	//세팅 해줘야함
-                    
+
                     { field: 'memo0', type: 'textarea', required: false },
                     { field: 'memo1', type: 'textarea', required: false },
                     { field: 'memo2', type: 'textarea', required: false },
@@ -332,18 +348,18 @@ block content
                         this.record.cate3 = this.record.cate3['text'];
                         this.record.cate4 = this.record.cate4['text'];
                         this.record.cate5 = this.record.cate5['text'];
-                        
+
                         this.record.writer_idx = this.record.writer_idx['id'];
                         //
-                        
+
                         //- console.log(this.record);return;
-                        
+
                         var formData = new FormData();
                         var self = this;
                         for (var key in this.record) {
                             formData.append(key, self.record[key]);                            
                         }
-                        
+
                         axios.post('/crud/write', formData).then(function(res) {
                             console.dir(res.data);
                             $("#save").text("입력");
@@ -371,31 +387,31 @@ block content
                         frmPop.target = 'popupView';
                         frmPop.jaelyo.value = w2ui.form.record.jaelyo;
                         frmPop.submit();
-                        
+
                     },
-                    
+
                 },
             },
             onError: function(e) {
                 console.log(e.xhr.responseText);
             },
         };
-        
-        
-        
+
+
+
         $(function () {
             $('#grid').w2grid(config.grid);
             $('#form').w2form(config.form);
-            
+
             $('#jaelyo').mousedown(function(event) {
                 if (event.which == 1) {
                     $("#jaelyo_helper").css("top", event.pageY);
                     $("#jaelyo_helper").css("left", event.pageX + 40);
-                    
+
                     $("#jaelyo_helper").show();
                 }
             });
-            
+
             //카테고리 불러오기
             axios.get('/crud/iterator?table=CATEGORYS_tbl&sort1=sort1 ASC').then(function(res) {
                 for (obj of res.data) {
@@ -412,11 +428,11 @@ block content
                     }
                 }                
                 getCategorys();
-                                
+
             }).catch(function(err){
                 console.log(err);
             });
-            
+
             //블로거 불러오기
             axios.get('/crud/iterator?table=BLOGER_tbl').then(function(res) {                
                 for (obj of res.data) {
@@ -426,7 +442,7 @@ block content
                     });
                 }                
                 getBlogers();
-                                
+
             }).catch(function(err){
                 console.log(err);
             });
@@ -440,7 +456,7 @@ block content
         }
         function getBlogers(id) {
             $("input[name='writer_idx']").w2field('list', { items: bloger });
-            
+
             if (id != null) {
                 for (obj of bloger) {
                     if (obj.id == id) {
@@ -448,36 +464,36 @@ block content
                     }
                 }
             }
-            
+
         }
         function formClear() {
             setTimeout(function() {
                 getCategorys();
                 getBlogers();
             }, 200);
-            
-        	$("#jaelyo").val("");
-        	w2ui.form.clear();
-        	for (var i=0;i<=20;i++) {
-        		$("#filename"+i).val("");
-        		$("#filename"+i+"_img").attr("src", "/images/no-img2.png");
-        		$("#filename"+i+"_img").attr("onclick", "");
-        		$("#filename"+i+"_x").hide();
-        	}
-        	w2ui.form.refresh();
+
+            $("#jaelyo").val("");
+            w2ui.form.clear();
+            for (var i=0;i<=20;i++) {
+                $("#filename"+i).val("");
+                $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
+                $("#filename"+i+"_img").attr("onclick", "");
+                $("#filename"+i+"_x").hide();
+            }
+            w2ui.form.refresh();
         }
-                
+
         function dragEnter(i, e) {
             console.log(i, "드래그 요소가 들어왔을떄", e);
             $("#filename"+i+"_img").addClass("bg-dark");
         }
         function dragLeave(i, e) {
             console.log(i, "드래그 요소가 나갔을때");
-        	$("#filename"+i+"_img").addClass("img-thumbnail");
-        	$("#filename"+i+"_img").removeClass("bg-dark");
+            $("#filename"+i+"_img").addClass("img-thumbnail");
+            $("#filename"+i+"_img").removeClass("bg-dark");
         }
         function dragOver(e) {
-        	e.stopPropagation();
+            e.stopPropagation();
             e.preventDefault();
         }
         function drop(i, e) {
@@ -485,34 +501,34 @@ block content
             e.preventDefault();
             var file = e.dataTransfer.files[0];
             var formData = new FormData();
-        	formData.append("upload_file", file, file.name);
-        	axios.post("http://images.lazulsoft.com/file_upload", formData).then(function(res) {
-        		console.dir(res.data);
+            formData.append("upload_file", file, file.name);
+            axios.post("http://images.lazulsoft.com/file_upload", formData).then(function(res) {
+                console.dir(res.data);
                 eval("w2ui.form.record.filename"+i+"='"+res.data.url+"';");
-        		$("#filename"+i+"_img").attr("src", res.data.url);
-        		$("#filename"+i+"_img").attr("onclick", "window.open('"+res.data.url+"')");
-        		$("#filename"+i+"_x").show();
+                $("#filename"+i+"_img").attr("src", res.data.url);
+                $("#filename"+i+"_img").attr("onclick", "window.open('"+res.data.url+"')");
+                $("#filename"+i+"_x").show();
                 $("#filename"+i+"_img").show();
-        		$("#filename"+i+"_img").addClass("img-thumbnail");
-        		$("#filename"+i+"_img").removeClass("bg-dark");
+                $("#filename"+i+"_img").addClass("img-thumbnail");
+                $("#filename"+i+"_img").removeClass("bg-dark");
             }).catch(function(err){
                 console.log(err);
             });
         }
         function deleteImage(i) {
-        	//- var path = $("#filename"+i+"_img").attr("src");
+            //- var path = $("#filename"+i+"_img").attr("src");
             //- console.log(path);
-        	//- var params = new URLSearchParams();
-        	//- params.append('filename', path);
-        	//- axios.post('/crud/file_delete', params).then(function(res) {
-        	//- 	console.dir(res.data);
-        	//- 	if (res.data.code == 1) {
-        	//- 		eval("w2ui.form.record.filename"+i+"='';");
-        	//- 		$("#filename"+i+"_img").attr("src", "/images/no-img2.png");
-        	//- 		$("#filename"+i+"_img").attr("onclick", "");
-        	//- 		$("#filename"+i+"_x").hide();
-        	//- 	}
-        	//- });
+            //- var params = new URLSearchParams();
+            //- params.append('filename', path);
+            //- axios.post('/crud/file_delete', params).then(function(res) {
+            //- 	console.dir(res.data);
+            //- 	if (res.data.code == 1) {
+            //- 		eval("w2ui.form.record.filename"+i+"='';");
+            //- 		$("#filename"+i+"_img").attr("src", "/images/no-img2.png");
+            //- 		$("#filename"+i+"_img").attr("onclick", "");
+            //- 		$("#filename"+i+"_x").hide();
+            //- 	}
+            //- });
             if (confirm("삭제하시겠습니까?")) {
                 eval("w2ui.form.record.filename"+i+"='';");
                 $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
