@@ -248,7 +248,7 @@ block content
                             for (var i=0;i<=20;i++) {
                                 eval("var fileLink = form.record.filename"+i);
                                 if (fileLink != '') {
-
+                                    console.log(fileLink);
                                     var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
 
                                     $("#filename"+i+"_img").attr("src", fileLink);
@@ -263,6 +263,8 @@ block content
                                     $("#filename"+i+"_img").attr("src", "/images/no-img2.png");
                                     $("#filename"+i+"_img").attr("onclick", "");
                                     $("#filename"+i+"_x").hide();
+                                    
+                                    $("#memo"+i).attr("onfocus", "");
                                 }
                             }
 
@@ -277,6 +279,7 @@ block content
                 searches: [
                     { field: 'idx', caption: '번호', type: 'int' },			//세팅 해줘야함
                     { field: 'title', caption: '제목', type: 'text' },			//세팅 해줘야함
+                    { field: 'writer_idx', caption: '블러거', type: 'text' },			//세팅 해줘야함
                 ],
                 columns: [
                     { field: 'idx', caption: '번호', size: '40px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
@@ -501,7 +504,7 @@ block content
             var file = e.dataTransfer.files[0];
             var formData = new FormData();
             formData.append("upload_file", file, file.name);
-            axios.post("http://images.lazulsoft.com/file_upload", formData).then(function(res) {
+            axios.post("#{ process.env.IMAGE_SERVER }", formData).then(function(res) {
                 console.dir(res.data);
                 eval("w2ui.form.record.filename"+i+"='"+res.data.url+"';");
                 $("#filename"+i+"_img").attr("src", res.data.url);
