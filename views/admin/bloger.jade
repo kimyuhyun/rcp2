@@ -87,7 +87,7 @@ block content
                     { field: 'thumb', caption: '썸네일', size: '50px', sortable: true, resizable: true, attr: 'align=center',	//세팅 해줘야함
                         render: function(record) {
                             if (record.thumb != '') {
-                                return '<img src="' + record.thumb + '" style="width: 50px; height: 30px;" />';
+                                return '<img src="' + record.thumb + '" style="width: 50px; height: 30px; margin-top: -3px; margin-left: -3px;" />';
                             }
                         }
                     },

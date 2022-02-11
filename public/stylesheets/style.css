@@ -1,3 +1,8 @@
+html {
+    min-width: 1400px;
+    overflow-x: auto;
+}
+
 .button_x {
     border: 0px;
     background: transparent;
@@ -10,6 +15,9 @@ a {
 }
 
 
-.w2ui-grid .w2ui-grid-body table td.w2ui-grid-data > div {
-	padding: 0px !important;
+.menu2 {
+    cursor: pointer;
+}
+.menu2:hover {
+    background: #fff;
 }

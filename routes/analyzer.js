@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var bodyParser = require('body-parser');
 var fs = require('fs');
 var db = require('../db');
 var menus = require('../menu');
@@ -10,25 +9,22 @@ require('moment-timezone');
 
 //메뉴를 전역변수에 넣어준다!
 global.MENUS = menus;
-global.SAVE_MENUS;
 global.CURRENT_URL;
+global.SHOW_MENU_LINK;
+global.LEVEL1;
 //
 
-function userChecking(req, res, next) {
+async function userChecking(req, res, next) {
+    console.log(req.session);
     if (req.session.mid == null) {
         res.redirect('/admin/login');
         return;
     }
-
     CURRENT_URL = req.baseUrl + req.path;
-
-    utils.setSaveMenu(req).then(function(data) {
-        SAVE_MENUS = data;
-        next();
-    });
+    next();
 }
 
-router.get('/graph1', userChecking, async function(req, res, next) {
+router.get('/graph1/:menu1/:menu2', userChecking, async function(req, res, next) {
     var gap = 0;
     var arr = new Array();
 
@@ -73,13 +69,15 @@ router.get('/graph1', userChecking, async function(req, res, next) {
         });
         //
     }
-    console.log(arr);
     res.render('./admin/graph1', {
-        rows: arr.reverse()
+        rows: arr.reverse(),
+        myinfo: req.session,
+        menu1: req.params.menu1,
+        menu2: req.params.menu2,
     });
 });
 
-router.get('/graph2', userChecking, async function(req, res, next) {
+router.get('/graph2/:menu1/:menu2', userChecking, async function(req, res, next) {
     var gap = 0;
     var arr = new Array();
 
@@ -108,11 +106,14 @@ router.get('/graph2', userChecking, async function(req, res, next) {
         //
     }
     res.render('./admin/graph2', {
-        rows: arr.reverse()
+        rows: arr.reverse(),
+        myinfo: req.session,
+        menu1: req.params.menu1,
+        menu2: req.params.menu2,
     });
 });
 
-router.get('/graph3', userChecking, async function(req, res, next) {
+router.get('/graph3/:menu1/:menu2', userChecking, async function(req, res, next) {
     var gap = 0;
     var arr = new Array();
 
@@ -187,16 +188,23 @@ router.get('/graph3', userChecking, async function(req, res, next) {
     }
 
     res.render('./admin/graph3', {
-        rows: arr
+        rows: arr,
+        myinfo: req.session,
+        menu1: req.params.menu1,
+        menu2: req.params.menu2,
     });
 });
 
-router.get('/liveuser', userChecking, async function(req, res, next) {
-    res.render('./admin/liveuser');
+router.get('/liveuser/:menu1/:menu2', userChecking, async function(req, res, next) {
+    res.render('./admin/liveuser', {
+        myinfo: req.session,
+        menu1: req.params.menu1,
+        menu2: req.params.menu2,
+    });
 });
 
 router.post('/liveuser', userChecking, function(req, res, next) {
-    var arr = [];
+    var arr = new Array();
 
     fs.readdir('./liveuser', async function(err, filelist) {
         for (file of filelist) {
@@ -204,38 +212,31 @@ router.post('/liveuser', userChecking, function(req, res, next) {
                 fs.readFile('./liveuser/' + file, 'utf8', function(err, data) {
                     resolve(data);
                 });
-            }).then(async function(data) {
+            }).then(function(data) {
                 try {
                     if (file != 'dummy') {
-                        await new Promise(function(resolve, reject) {
-                            var tmp = data.split('|S|');
-                            console.log(data);
-                            moment.tz.setDefault("Asia/Seoul");
-                            var connTime = moment.unix(tmp[0] / 1000).format('YYYY-MM-DD HH:mm');
-                            var minDiff = moment.duration(moment(new Date()).diff(moment(connTime))).asMinutes();
-                            if (minDiff > 4) {
-                                console.log(minDiff);
-                                fs.unlink('./liveuser/' + file, function(err) {
-                                    console.log(err);
-                                    resolve();
-                                });
-                            } else {
-                                resolve();
-                            }
-                        }).then();
-
-                        if (tmp[1]) {
-                            arr.push({
-                                'id': file,
-                                'url': tmp[1],
-                                'date': connTime,
+                        var tmp = data.split('|S|');
+                        console.log(data);
+                        moment.tz.setDefault("Asia/Seoul");
+                        var connTime = moment.unix(tmp[0] / 1000).format('YYYY-MM-DD HH:mm');
+                        var minDiff = moment.duration(moment(new Date()).diff(moment(connTime))).asMinutes();
+                        if (minDiff > 4) {
+                            console.log(minDiff);
+                            fs.unlink('./liveuser/' + file, function(err) {
+                                console.log(err);
                             });
                         }
+                        arr.push({
+                            'id': file,
+                            'url': tmp[1],
+                            'date': connTime,
+                        });
                     }
                     console.log(arr);
                 } catch (e) {
                     console.log(e);
                 }
+
             });
         }
         var result = {
