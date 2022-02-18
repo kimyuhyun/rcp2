@@ -20,91 +20,79 @@ html
         script(src='/javascripts/axios.min.js')
         script(src='/javascripts/utils.js')
 
-    body(class='bg-white')
-        div(class='d-flex flex-column' style='height: 100vh;' id='frame')
-            div(class='d-flex flex-row align-items-center border-bottom' style='height: 70px;')
-                div(class='text-center' style='width: 250px; cursor: pointer;' onclick='location.href=\'#{ process.env.HOST_NAME }/admin\'') RCP2
-                div(class='flex-grow-1')
-                div(class='ps-1')
-                    if myinfo.filename0 != null && myinfo.filename0 != ''
-                        img(src='#{ myinfo.filename0 }' class='rounded-circle' style='width: 40px; height: 40px;')
-                
-                div(class='pe-1')
-                    div(class='dropdown')
-                        button(class='btn dropdown-toggle' type='button' id="dropdownMenu2" data-bs-toggle='dropdown' aria-expanded='false') #{ myinfo.name1 }
-                        ul(class='dropdown-menu' aria-labelledby="dropdownMenu2")
-                            li
-                                a(class='dropdown-item' href='/admin/my_profile') 나의프로필
-                            li
-                                a(class='dropdown-item' href='/admin/logout') 로그아웃
-                
-            div(class='d-flex flex-row flex-grow-1')
-                div(class='border-end bg-light', style='width: 250px; height: 100%;')
-                    - var target = '';
-                    - var active = '';
-                    - var m1 = '';
-                    - var m2 = '';
-                    - var i = -1;
-                    - var navTitle1 = '';
-                    - var navTitle2 = '';
+    body(class='bg-light')
+        // container
+        div(class='position-absolute top-0 w-100' style='bottom: 30px;')
+            // left menu
+            div(id="aside" class='position-absolute top-0 left-0 bottom-0 bg-white border-end overflow-auto' style='width: 250px;')
+                div(class='w-100 hand d-flex align-items-center justify-content-center' style='height: 70px;' onclick='location.href=\'#{ process.env.HOST_NAME }/admin\'') RCP2
                     
-                    - each row1 in MENUS
-                        - i = i + 1;
-                        - target = row1.title + i;
-                        
-                        if i == menu1 
-                            - active = 'show';
-                            - m1 = 'text-primary';
-                        else
-                            - active = '';
-                            - m1 = 'collapsed';
-                    
-                        div(class='accordion accordion-flush' id='#{ row1.title }')
-                            div(class='accordion-item')
-                                h2(class='accordion-header' id='#{ row1.title }')
-                                    button(class='#{ m1 } accordion-button bg-light' style='box-shadow: none;' type='button' data-bs-toggle='collapse' data-bs-target='##{ target }' aria-expanded='false' aria-controls='#{ target }')
-                                        =row1.title
-                        
-                                div(id='#{ target }' class='bg-light accordion-collapse collapse #{ active }' aria-labelledby='#{ row1.title }' data-bs-parent='#{ row1.title }')
-                                    div(class='accordion-body p-0')
-                                        - var j = -1;
-                                        - each row2 in row1.child
-                                            - j = j + 1;
-                                            
-                                            if active == 'show' && j == menu2
-                                                - m2 = 'text-primary bg-white';
-                                                - navTitle1 = row1.title;
-                                                - navTitle2 = row2.title;
-                                            else
-                                                - m2 = 'text-dark';
-                                                
-                                            
-                                            //- 전체관리자는 체크하지 않는다..
-                                            if LEVEL1 > 1
-                                                - each tmp in SHOW_MENU_LINK
-                                                    if row2.link == tmp                                            
-                                                        div(class='#{ m2 } w-100 text-start py-3 ps-4 menu2' onclick='location.href="#{ row2.link }/#{i}/#{j}"') #{row2.title}
-                                            else
-                                                div(class='#{ m2 } w-100 text-start py-3 ps-4 menu2' onclick='location.href="#{ row2.link }/#{i}/#{j}"') #{row2.title}
-                                                    
+                - var target = '';
+                - var active = '';
+                - var m1 = '';
+                - var m2 = '';
+                - var i = -1;
+                - var navTitle1 = '';
+                - var navTitle2 = '';
+        
+                - each row1 in MENUS
+                    - i = i + 1;
+                    - target = row1.title + i;
+        
+                    if i == menu1 
+                        - active = 'show';
+                        - m1 = 'text-primary fw-bolder';
+                    else
+                        - active = '';
+                        - m1 = 'collapsed';
+            
+                    div(class='accordion accordion-flush' id='#{ row1.title }')
+                        div(class='accordion-item')
+                            h2(class='accordion-header' id='#{ row1.title }')
+                                button(class='#{ m1 } accordion-button bg-white' style='box-shadow: none;' type='button' data-bs-toggle='collapse' data-bs-target='##{ target }' aria-expanded='false' aria-controls='#{ target }')
+                                    =row1.title
+        
+                            div(id='#{ target }' class=' accordion-collapse collapse #{ active }' aria-labelledby='#{ row1.title }' data-bs-parent='#{ row1.title }')
+                                div(class='accordion-body p-0')
+                                    - var j = -1;
+                                    - var id = '';
+                                    - each row2 in row1.child
+                                        - j = j + 1;
+                                        - id = i + '_' + j;
+        
+                                        if active == 'show' && j == menu2
+                                            - m2 = 'text-white bg-primary';
+                                            - navTitle1 = row1.title;
+                                            - navTitle2 = row2.title;
+                                        else
+                                            - m2 = 'text-dark';
+        
+        
+                                        //- 전체관리자는 체크하지 않는다..
+                                        if LEVEL1 > 1
+                                            - each tmp in SHOW_MENU_LINK
+                                                if row2.link == tmp                                            
+                                                    div(id='#{ id }' class='#{ m2 } w-100 text-start py-3 ps-4 menu2' onclick='location.href="#{ row2.link }/#{i}/#{j}/##{ id }"') #{row2.title}
+                                        else
+                                            div(id='#{ id }' class='#{ m2 } w-100 text-start py-3 ps-4 menu2' onclick='location.href="#{ row2.link }/#{i}/#{j}/##{ id }"') #{row2.title}
                                         
-                div(class='flex-grow-1 p-4')
-                    div(class='text-secondary') #{ navTitle1 }
-                    h3(style='margin-top: -5px;') #{ navTitle2 }
-                    block content
-                    
-                    
-                    
-                    
-script.
-    $(document).ready(function() {
-        var h = $(window).height();
-        $('#frame').css('height', h);
-    });
+            
+        
+            
+            div(class='position-absolute overflow-auto p-4' style='top: 0px; bottom: 0px; left: 250px; right: 0px;')
+                div(class='text-secondary') #{ navTitle1 }
+                h3(style='margin-top: -5px;') #{ navTitle2 }
+                block content
+
+
+        //footer                            
+        div(class='position-fixed bottom-0 start-0 bg-white border-top w-100 d-flex align-items-center ps-2' style='height: 30px;')
+            div(class='dropdown')
+                button(class='bg-white border-0 dropdown-toggle' style='font-size:14px;' type='button' id="dropdownMenu2" data-bs-toggle='dropdown' aria-expanded='false') #{ myinfo.name1 }
+                ul(class='dropdown-menu' aria-labelledby="dropdownMenu2" style='')
+                    li
+                        a(class='dropdown-item' href='/admin/my_profile') 나의프로필
+                    li
+                        a(class='dropdown-item' href='/admin/logout') 로그아웃
     
-    $(window).resize(function() {
-        var h = $(window).height();
-        $('#frame').css('height', h);
-    });
-    
-    
+        
