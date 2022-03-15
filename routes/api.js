@@ -85,29 +85,55 @@ async function setLog(req, res, next) {
 router.get('/home', setLog, async function(req, res, next) {
     var arr = {};
 
-    await new Promise(function(resolve, reject) {
-        const sql = `
-            SELECT
-            A.idx,
-            A.title,
-            A.filename0,
-            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
-            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
-            FROM RCP_tbl as A
-            ORDER BY RAND() LIMIT 0, 10
-        `;
+    var sql = `
+        SELECT
+        A.idx,
+        A.title,
+        A.filename0,
+        (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+        (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+        FROM RCP_tbl as A
+        ORDER BY RAND() LIMIT 0, 10
+    `;
+    var params = [];
+    arr.recommend = await utils.queryResult(sql, params);
 
-        db.query(sql, function(err, rows, fields) {
-            if (!err) {
-                resolve(rows);
-            } else {
-                console.log(err);
-                resolve(err);
-            }
-        });
-    }).then(async function(data) {
-        arr.recommend = await utils.nvl(data);
-    });
+    var sql = `
+        SELECT
+            count(*) as cnt,
+            A.rcp_idx,
+            B.idx,
+            B.title,
+            B.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_thumb
+        FROM RCP_SEE_tbl as A, RCP_tbl as B
+        WHERE A.rcp_idx = B.idx
+        GROUP BY rcp_idx
+        ORDER BY cnt DESC
+        LIMIT 0, 6
+    `;
+    var params = [];
+    arr.see = await utils.queryResult(sql, params);
+
+    var sql = `
+        SELECT
+            count(*) as cnt,
+            A.rcp_idx,
+            B.idx,
+            B.title,
+            B.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_thumb
+        FROM RCP_FAV_tbl as A, RCP_tbl as B
+        WHERE A.rcp_idx = B.idx
+        GROUP BY rcp_idx
+        ORDER BY cnt DESC 
+        LIMIT 0, 6
+    `;
+    var params = [];
+    arr.fav = await utils.queryResult(sql, params);
+
 
     res.send(arr);
 });
