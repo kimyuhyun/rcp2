@@ -128,7 +128,7 @@ router.get('/home', setLog, async function(req, res, next) {
         FROM RCP_FAV_tbl as A, RCP_tbl as B
         WHERE A.rcp_idx = B.idx
         GROUP BY rcp_idx
-        ORDER BY cnt DESC 
+        ORDER BY cnt DESC
         LIMIT 0, 6
     `;
     var params = [];
@@ -250,6 +250,25 @@ router.get('/get_fav/:id', setLog, async function(req, res, next) {
         arr = await utils.nvl(data);
     });
 
+    res.send(arr);
+});
+
+router.get('/get_category/:gbn', setLog, async function(req, res, next) {
+    const gbn = req.params.gbn;
+    var arr = [];
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT name1 FROM CATEGORYS_tbl WHERE gbn = ? ORDER BY sort1 ASC`;
+        db.query(sql, gbn, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(async function(data) {
+        arr = await utils.nvl(data);
+    });
     res.send(arr);
 });
 
