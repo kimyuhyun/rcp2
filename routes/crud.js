@@ -87,7 +87,7 @@ router.post('/list', userChecking, async function(req, res, next) {
                 tmp += " OR ";
             }
             if (params.search[i].field == 'writer_idx') {
-                tmp += params.search[i].field + " = " + params.search[i].value + "";
+                tmp += params.search[i].field + " = '" + params.search[i].value + "'";
             } else {
                 tmp += params.search[i].field + " LIKE '%" + params.search[i].value + "%'";
             }
