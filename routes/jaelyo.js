@@ -87,9 +87,53 @@ router.get('/get_rcp_result', setLog, async function(req, res, next) {
         (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name
         FROM RCP_tbl as A WHERE jaelyo `;
 
+    var sql2 = '';
+
     if (j0 != '' && j1 != '' && j2 != '') {
+        sql2 = `${sql} LIKE '%${j0}%' AND jaelyo LIKE '%${j1}%' AND jaelyo LIKE '%${j2}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr0 = arr;
+
+        sql2 = `${sql} LIKE '%${j0}%' AND jaelyo LIKE '%${j1}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr1 = arr;
+
+        sql2 = `${sql} LIKE '%${j0}%' AND jaelyo LIKE '%${j2}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr2 = arr;
+
+        sql2 = `${sql} LIKE '%${j1}%' AND jaelyo LIKE '%${j2}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr3 = arr;
+
+        sql2 = `${sql} LIKE '%${j0}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr4 = arr;
+
+        sql2 = `${sql} LIKE '%${j1}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr5 = arr;
+
+        sql2 = `${sql} LIKE '%${j2}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr6 = arr;
+
+
+    } else if (j0 != '' && j1 != '') {
+        sql2 = `${sql} LIKE '%${j0}%' AND jaelyo LIKE '%${j1}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr0 = arr;
+
+        sql2 = `${sql} LIKE '%${j0}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr1 = arr;
+
+        sql2 = `${sql} LIKE '%${j1}%' `;
+        var arr = await utils.queryResult(sql2, null);
+        resultObj.arr2 = arr;
+    } else {
         await new Promise(function(resolve, reject) {
-            sql0 = `${sql} LIKE '%${j0}%' AND jaelyo LIKE '%${j1}%' AND jaelyo LIKE '%${j2}%' `;
+            sql0 = `${sql} LIKE '%${j0}%' `;
             db.query(sql0, function(err, rows, fields) {
                 // console.log(rows);
                 if (!err) {
@@ -105,42 +149,6 @@ router.get('/get_rcp_result', setLog, async function(req, res, next) {
             eval("resultObj.arr" + seq + " = rs");
         });
     }
-
-    if (j0 != '' && j1 != '') {
-        await new Promise(function(resolve, reject) {
-            sql0 = `${sql} LIKE '%${j0}%' AND jaelyo LIKE '%${j1}%' `;
-            db.query(sql0, function(err, rows, fields) {
-                // console.log(rows);
-                if (!err) {
-                    resolve(rows);
-                } else {
-                    console.log(err);
-                    resolve(err);
-                }
-            });
-        }).then(async function(data) {
-            var rs = await utils.nvl(data);
-            seq++;
-            eval("resultObj.arr" + seq + " = rs");
-        });
-    }
-
-    await new Promise(function(resolve, reject) {
-        sql0 = `${sql} LIKE '%${j0}%' `;
-        db.query(sql0, function(err, rows, fields) {
-            // console.log(rows);
-            if (!err) {
-                resolve(rows);
-            } else {
-                console.log(err);
-                resolve(err);
-            }
-        });
-    }).then(async function(data) {
-        var rs = await utils.nvl(data);
-        seq++;
-        eval("resultObj.arr" + seq + " = rs");
-    });
 
     res.send(resultObj);
 });

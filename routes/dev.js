@@ -50,23 +50,10 @@ async function setLog(req, res, next) {
 
 router.get('/', setLog, async function(req, res, next) {
 
-    // var arr = [];
-    // await new Promise(function(resolve, reject) {
-    //     const sql = ``;
-    //     db.query(sql, function(err, rows, fields) {
-    //         console.log(rows);
-    //         if (!err) {
-    //             resolve(rows);
-    //         } else {
-    //             console.log(err);
-    //             resolve(err);
-    //         }
-    //     });
-    // }).then(async function(data) {
-    //     arr = await utils.nvl(data);
-    // });
-    //
-    // res.send('api');
+    // var sql = ``;
+    // var params = [];
+    // var arr = await utils.queryResult(sql, params);
+    // console.log(arr);
 });
 
 
