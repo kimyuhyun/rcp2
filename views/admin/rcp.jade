@@ -162,7 +162,7 @@ block content
                 { field: 'filename0', caption: '썸네일', size: '50px', sortable: true, resizable: true, style: 'padding: 0px;',	//세팅 해줘야함
                     render: function(record) {
                         if (record.filename0 != null && record.filename0 != '') {
-                            var newUrl = record.filename0.replace('https','http');
+                            var newUrl = record.filename0.replace('https','https');
                             return '<img src="' + newUrl + '" style="width: 50px; height: 40px; margin-top: -3px; margin-left: -3px;" />';
                         }
                     }
@@ -451,7 +451,7 @@ block content
                             eval("var fileLink = w2ui.form.record.filename"+i);
                             console.log(fileLink);
                             if (fileLink != '') {
-                                fileLink = fileLink.replace('https', 'http');
+                                fileLink = fileLink.replace('https', 'https');
                                 
                                 var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
                                 $("#filename"+i+"_img").attr("src", fileLink);
