@@ -37,7 +37,7 @@ server.listen(port, '0.0.0.0', function() {
     for (var dev in ifaces) {
         var alias = 0;
         ifaces[dev].forEach(function(details) {
-            if (details.family == 'IPv4' && details.internal === false) {
+            if (details.family == 'IPv4' && details.internal === false && details.address.match('172')) {
                 result = details.address;
                 ++alias;
             }
