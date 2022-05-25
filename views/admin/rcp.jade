@@ -100,6 +100,7 @@ block content
             button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("대");') 대
             button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("주먹");') 주먹
             button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("꼬집");') 꼬집
+            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("적당량");') 적당량
 
 
     //- 들여쓰기 중요함
@@ -161,7 +162,8 @@ block content
                 { field: 'filename0', caption: '썸네일', size: '50px', sortable: true, resizable: true, style: 'padding: 0px;',	//세팅 해줘야함
                     render: function(record) {
                         if (record.filename0 != null && record.filename0 != '') {
-                            return '<img src="' + record.filename0 + '" style="width: 50px; height: 40px; margin-top: -3px; margin-left: -3px;" />';
+                            var newUrl = record.filename0.replace('https','http');
+                            return '<img src="' + newUrl + '" style="width: 50px; height: 40px; margin-top: -3px; margin-left: -3px;" />';
                         }
                     }
                 },
@@ -449,6 +451,8 @@ block content
                             eval("var fileLink = w2ui.form.record.filename"+i);
                             console.log(fileLink);
                             if (fileLink != '') {
+                                fileLink = fileLink.replace('https', 'http');
+                                
                                 var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
                                 $("#filename"+i+"_img").attr("src", fileLink);
                                 $("#filename"+i+"_img").attr("onclick", show_image);

@@ -561,6 +561,7 @@ router.get('/extra', async function(req, res, next) {
                     tmp2 = replaceAll(tmp2, '파김치', '김치');
                     tmp2 = replaceAll(tmp2, '호박잎', '호박');
                     tmp2 = replaceAll(tmp2, '파인애플통조림', '파인애플');
+                    tmp2 = replaceAll(tmp2, '사과식초', '식초');
 
 
 
