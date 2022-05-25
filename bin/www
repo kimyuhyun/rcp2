@@ -20,13 +20,9 @@ const options = {
     cert: fs.readFileSync('cert.pem'),
 };
 
-var server;
+// var server = https.createServer(options, app);
+var server = http.createServer(app);
 
-if (port == 3001) {
-    server = https.createServer(options, app);
-} else {
-    server = http.createServer(app);
-}
 
 server.listen(port, '0.0.0.0', function() {
     //추가됨!
