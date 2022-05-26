@@ -43,7 +43,7 @@ server.listen(port, '0.0.0.0', function() {
             }
         });
     }
-    console.log('https://' + result + ':' + port + '/admin');
+    console.log('http://' + result + ':' + port + '/admin');
 
 });
 

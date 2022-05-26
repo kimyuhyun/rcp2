@@ -55,11 +55,13 @@ block content
                                     div
                                         input(name='cate5')
 
-                    div(class='w-50 ms-4')
-                        div(class='flex-column flex-fill')
-                            div
-                                textarea(id='jaelyo' name='jaelyo', rows='11', style='font-size: 14px;')
-                                button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
+                    div(class='w-25 ms-4')
+                        div(class='flex-column flex-fill h-100')
+                            textarea(id='jaelyo' name='jaelyo', rows='11', style='font-size: 14px; height: 270px;')
+                            button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
+                                
+                    div(class='ms-4')
+                        img(id='rcp_img', src='', style='height: 300px;')
 
 
                 div(class='d-flex flex-wrap mt-3')
@@ -88,7 +90,7 @@ block content
         input(type="hidden", name="jaelyo")
 
 
-    img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:9999; height: 300px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
+    //- img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:9999; height: 300px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
 
     div(id='jaelyo_helper' class='card shadow' style='position: absolute; z-index:9999; background: #fff; display: none; font-size: 10px;')
         div(class='btn-group')
@@ -404,6 +406,7 @@ block content
                 return;    
             }
             element.value = strFront + txt + strEnd;
+            w2ui.form.record.jaelyo = strFront + txt + strEnd;
         }
         function openPopup() {
             $().w2popup('open', {

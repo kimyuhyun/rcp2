@@ -15,6 +15,7 @@ var analyzerRouter = require('./routes/analyzer');
 var apiRouter = require('./routes/api');
 var rcpRouter = require('./routes/rcp');
 var jaelyoRouter = require('./routes/jaelyo');
+var tmpRouter = require('./routes/tmp');
 
 
 var app = express();
@@ -54,6 +55,7 @@ app.use('/analyzer', analyzerRouter);
 app.use('/api', apiRouter);
 app.use('/rcp', rcpRouter);
 app.use('/jaelyo', jaelyoRouter);
+app.use('/tmp', tmpRouter);
 
 
 // catch 404 and forward to error handler
