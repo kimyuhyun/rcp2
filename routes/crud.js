@@ -52,6 +52,7 @@ router.post('/list',  async function(req, res, next) {
     var level1 = req.query.level1;
     var step = req.query.step;
     var parent_idx = req.query.parent_idx;
+    var gbn = req.query.gbn;
     var params = {};
 
     if (req.body.request != null) {
@@ -84,6 +85,10 @@ router.post('/list',  async function(req, res, next) {
 
     if (level1 != null) {
         where += " AND level1 = " + level1;
+    }
+
+    if (gbn != null) {
+        where += ` AND gbn = '${gbn}'`;
     }
 
     if (params.search != null) {
