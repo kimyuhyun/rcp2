@@ -36,21 +36,23 @@ const upload = multer({
 
 
 function userChecking(req, res, next) {
-    console.log(req.session.mid);
+    //여기서 토큰 체크!
     if (req.session.mid == null) {
         res.redirect('/admin/login');
         return;
     }
+    //
     next();
 }
 
 
-router.post('/list', userChecking, async function(req, res, next) {
+router.post('/list',  async function(req, res, next) {
     var table = req.query.table;
     var board_id = req.query.board_id;
     var level1 = req.query.level1;
-    var gbn = req.query.gbn
-    var params;
+    var step = req.query.step;
+    var parent_idx = req.query.parent_idx;
+    var params = {};
 
     if (req.body.request != null) {
         params = JSON.parse(req.body.request);
@@ -59,7 +61,7 @@ router.post('/list', userChecking, async function(req, res, next) {
         params.limit = 10;
     }
 
-    // console.log(params);
+    console.log(params);
 
     var records = 0;
     var sql = "";
@@ -72,12 +74,16 @@ router.post('/list', userChecking, async function(req, res, next) {
         where += " AND board_id = '" + board_id + "'";
     }
 
-    if (level1 != null) {
-        where += " AND level1 = " + level1;
+    if (step != null) {
+        where += " AND step = '" + step + "'";
     }
 
-    if (gbn) {
-        where += " AND gbn = '" + gbn + "'";
+    if (parent_idx != null) {
+        where += " AND parent_idx = '" + parent_idx + "'";
+    }
+
+    if (level1 != null) {
+        where += " AND level1 = " + level1;
     }
 
     if (params.search != null) {
@@ -86,11 +92,7 @@ router.post('/list', userChecking, async function(req, res, next) {
             if (i > 0) {
                 tmp += " OR ";
             }
-            if (params.search[i].field == 'writer_idx') {
-                tmp += params.search[i].field + " = '" + params.search[i].value + "'";
-            } else {
-                tmp += params.search[i].field + " LIKE '%" + params.search[i].value + "%'";
-            }
+            tmp += params.search[i].field + " LIKE '%" + params.search[i].value + "%'";
         }
         where += " AND (" + tmp + ")";
     }
@@ -103,7 +105,12 @@ router.post('/list', userChecking, async function(req, res, next) {
 
 
     if (params.sort != null) {
-        orderby = " ORDER BY " + params.sort[0].field + " " + params.sort[0].direction;
+        orderby = ` ORDER BY `;
+        var tmp = '';
+        for (obj of params.sort) {
+            tmp += `, ${obj.field} ${obj.direction} `;
+        }
+        orderby += tmp.substring(1);
     } else {
         orderby = " ORDER BY idx DESC ";
     }
@@ -120,17 +127,8 @@ router.post('/list', userChecking, async function(req, res, next) {
 });
 
 router.get('/iterator', userChecking, async function(req, res, next) {
-    const table = req.query.table;
-    const sort1 = req.query.sort1;
-
-    var sql = "SELECT * FROM " + table + " ";
-    if (sort1) {
-        sql += " ORDER BY " + sort1;
-    } else {
-        sql += " ORDER BY idx DESC ";
-    }
-
-
+    var table = req.query.table;
+    var sql = "SELECT * FROM " + table + " ORDER BY idx DESC";
     db.query(sql, table, function(err, rows, fields) {
         res.send(rows);
     });
@@ -188,6 +186,7 @@ router.post('/write', userChecking, upload.array('FILES'), async function(req, r
                 arr['msg'] = '등록 되었습니다.';
                 res.send(arr);
             } else {
+                console.log(err);
                 res.send(err);
             }
         });
@@ -204,19 +203,12 @@ router.post('/write', userChecking, upload.array('FILES'), async function(req, r
                     res.send(arr);
                 });
             } else {
+                console.log(err);
                 res.send(err);
             }
         });
     }
     // console.log(sql, records);
-});
-
-router.get('/view', userChecking, async function(req, res, next) {
-    console.log('/view', req.body);
-
-    var arr = new Object();
-    arr['status'] = 'success';
-    res.send(arr);
 });
 
 router.post('/delete', userChecking, async function(req, res, next) {
@@ -232,27 +224,45 @@ router.post('/delete', userChecking, async function(req, res, next) {
 });
 
 router.post('/remove', userChecking, async function(req, res, next) {
-    var table = req.query.table;
-    var params = JSON.parse(req.body.request);
+    const table = req.query.table;
+    const params = JSON.parse(req.body.request);
     console.log(params);
-    var sql = "";
     for (idx of params.selected) {
-        sql = "DELETE FROM " + table + " WHERE idx = " + idx;
+        const sql = `DELETE FROM ${table} WHERE idx = ${idx}`;
         db.query(sql);
         console.log(sql);
     }
+     var arr = new Object();
+    arr['code'] = 1;
+    res.send(arr);
+});
 
+router.post('/reply_delete', userChecking, async function(req, res, next) {
+    var table = req.query.table;
+    var params = JSON.parse(req.body.request);
+    console.log(params);
+    var sql = ``;
+    for (idx of params.selected) {
+        sql = `UPDATE ${table} SET id='admin', name1='관리자', memo='삭제된 댓글 입니다.', filename0='' WHERE idx = ${idx}`;
+        db.query(sql);
+    }
     var arr = new Object();
     arr['code'] = 1;
     res.send(arr);
 });
 
-
 router.post('/copy', userChecking, async function(req, res, next) {
     const table = req.query.table;
-    let sql = "";
+    var sql = '';
+    var arr = [];
 
-    for (idx of req.body.idx) {
+    if (!Array.isArray(req.body.idx)) {
+        arr.push(req.body.idx);
+    } else {
+        arr = req.body.idx;
+    }
+
+    for (idx of arr) {
         await new Promise(function(resolve, reject) {
             sql = 'SELECT * FROM ' + table + ' WHERE idx = ?';
             db.query(sql, idx, function(err, rows, fields) {
@@ -261,7 +271,7 @@ router.post('/copy', userChecking, async function(req, res, next) {
                     delete rows[0].modified;
                     delete rows[0].created;
 
-                    let records = [];
+                    var records = [];
                     sql = 'INSERT INTO ' + table + ' SET ';
                     for (key in rows[0]) {
                         if (rows[0][key] != 'null') {
@@ -274,8 +284,13 @@ router.post('/copy', userChecking, async function(req, res, next) {
                         }
                     }
                     sql += 'created=NOW(),modified=NOW()';
+
                     db.query(sql, records, function(err, rows, fields) {
-                        resolve();
+                        if (!err) {
+                            resolve();
+                        } else {
+                            console.log(err);
+                        }
                     });
                 } else {
                     console.log(err);
