@@ -462,10 +462,8 @@ block content
                         
                         for (var i=0; i <= 20; i++) {
                             eval("var fileLink = w2ui.form.record.filename"+i);
-                            console.log(fileLink);
-                            if (fileLink != '') {
-                                //- fileLink = fileLink.replace('https', 'http');
-                                
+                            console.log('fileLink', fileLink);
+                            if (fileLink) {
                                 var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
                                 $("#filename"+i+"_img").attr("src", fileLink);
                                 $("#filename"+i+"_img").attr("onclick", show_image);
