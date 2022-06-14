@@ -139,6 +139,62 @@ router.get('/home', setLog, async function(req, res, next) {
 });
 
 
+
+
+
+router.get('/home2', setLog, async function(req, res, next) {
+    var arr = {};
+
+    var sql = `
+        SELECT
+            count(*) as cnt,
+            A.rcp_idx,
+            B.idx,
+            B.title,
+            B.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_thumb
+        FROM RCP_SEE_tbl as A, RCP_tbl as B
+        WHERE A.rcp_idx = B.idx
+        GROUP BY rcp_idx
+        ORDER BY cnt DESC
+        LIMIT 0, 6
+    `;
+    var params = [];
+    arr.trend = await utils.queryResult(sql, params);
+
+    var sql = `
+        SELECT
+            A.idx,
+            A.title,
+            A.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = A.writer_idx) as writer_thumb
+        FROM RCP_tbl as A
+        ORDER BY A.idx DESC
+        LIMIT 0, 6
+    `;
+    var params = [];
+    arr.recent = await utils.queryResult(sql, params);
+
+    var sql = `
+        SELECT
+            idx,
+            '' as title,
+            '' as filename0,
+            name1 as writer_name,
+            thumb as writer_thumb
+        FROM BLOGER_tbl
+        ORDER BY idx DESC
+    `;
+    var params = [];
+    arr.writers = await utils.queryResult(sql, params);
+
+
+    res.send(arr);
+});
+
+
 router.get('/detail/:id/:idx', setLog, async function(req, res, next) {
     const id = req.params.id;
     const idx = req.params.idx;
@@ -272,6 +328,40 @@ router.get('/get_category/:gbn', setLog, async function(req, res, next) {
     res.send(arr);
 });
 
+
+router.get('/get_category_in_list', setLog, async function(req, res, next) {
+    const cate = req.query.cate;
+    var arr = [];
+    await new Promise(function(resolve, reject) {
+        const sql = `
+            SELECT
+                count(*) as cnt,
+                B.idx,
+                B.title,
+                B.filename0,
+                (SELECT name1 FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_name
+            FROM RCP_SEE_tbl as A, RCP_tbl as B
+            WHERE A.rcp_idx = B.idx
+            AND B.cate1 = ?
+            GROUP BY rcp_idx
+            ORDER BY cnt DESC
+            LIMIT 0, 6
+        `;
+        db.query(sql, cate, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows);
+            } else {
+                console.log(err);
+                resolve(err);
+            }
+        });
+    }).then(async function(data) {
+        arr = await utils.nvl(data);
+    });
+    res.send(arr);
+});
+
+
 router.get('/get_categorys', setLog, async function(req, res, next) {
 
     var arr = {};
@@ -375,6 +465,35 @@ router.get('/get_list/:page', setLog, async function(req, res, next) {
 
     res.send(arr);
 });
+
+
+router.get('/get_list2/:page', setLog, async function(req, res, next) {
+    const page = req.params.page * 20;
+    const orderby = req.query.orderby;
+    var arr = [];
+
+    var sql = `
+        SELECT
+            count(*) as cnt,
+            A.rcp_idx,
+            B.idx,
+            B.title,
+            B.filename0,
+            (SELECT name1 FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_name,
+            (SELECT thumb FROM BLOGER_tbl WHERE idx = B.writer_idx) as writer_thumb
+        FROM RCP_SEE_tbl as A, RCP_tbl as B
+        WHERE A.rcp_idx = B.idx
+        GROUP BY rcp_idx
+        ${orderby}
+        LIMIT ?, 20
+    `;
+    var params = [page];
+    arr = await utils.queryResult(sql, params);
+    res.send(arr);
+});
+
+
+
 
 router.get('/get_bloger_list', setLog, async function(req, res, next) {
     var arr = [];

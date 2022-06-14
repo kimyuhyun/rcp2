@@ -19,11 +19,12 @@ function tokenChecking(req, res, next) {
 
 
 router.post('/write', tokenChecking, async function(req, res, next) {
-    let table = req.body.table;
-    let idx = req.body.idx;
-    let board_id = req.body.board_id;
-    let id = req.body.id;
-    let step = req.body.step;
+
+    var table = req.body.table;
+    var idx = req.body.idx;
+    var board_id = req.body.board_id;
+    var id = req.body.id;
+    var step = req.body.step;
 
 
     delete req.body.table;
@@ -45,7 +46,7 @@ router.post('/write', tokenChecking, async function(req, res, next) {
         }
     }
 
-    // console.log(records);return;
+
 
     if (idx == null) {
         sql = `INSERT INTO ${table} SET ${sql} created = NOW(), modified = NOW()`;
