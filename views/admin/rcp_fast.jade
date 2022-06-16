@@ -205,18 +205,6 @@ block content
                             $("#rcp_img").hide();
                         });
                     },
-                    check_jaelyo: function() {
-                        var frmPop = document.frmPopup;
-                        var url = '/rcp/check_jaelyo';
-                        window.open('', 'popupView', 'width=400, height=800, menubar=no, status=no, toolbar=no, left=0, top=0');
-
-                        frmPop.action = url;
-                        frmPop.target = 'popupView';
-                        frmPop.jaelyo.value = w2ui.form.record.jaelyo;
-                        frmPop.submit();
-                        
-                    },
-                    
                 },
             },
             onError: function(e) {
@@ -230,17 +218,10 @@ block content
             $('#grid').w2grid(config.grid);
             $('#form').w2form(config.form);
             
-            $('#jaelyo').mousedown(function(event) {
-                if (event.which == 1) {
-                    $("#jaelyo_helper").css("top", event.pageY);
-                    $("#jaelyo_helper").css("left", event.pageX + 20);
-                    
-                    $("#jaelyo_helper").show();
-                }
-            });
             
             //카테고리 불러오기
             axios.get('/crud/iterator?table=CATEGORYS_tbl&sort1=gbn ASC, sort1 ASC').then(function(res) {
+                console.log(res.data);
                 var html = '';
                 var old = '';
                 var id = '';

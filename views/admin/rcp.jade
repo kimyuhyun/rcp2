@@ -28,6 +28,12 @@ block content
                                         input(name='cate1')
                         tr
                             td
+                                div(class='w2ui-field w2ui-span2 flex-fill')
+                                    label iOS
+                                    div
+                                        select(name='is_ios')
+                                            option(value=0) N
+                                            option(value=1) Y
                             td
                                 div(class='w2ui-field w2ui-span2 flex-fill')
                                     label 상황별
@@ -170,7 +176,7 @@ block content
             ],
             columns: [
                 { field: 'idx', caption: '번호', size: '40px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
-                //- { field: 'is_ios', caption: 'ios', size: '40px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
+                { field: 'is_ios', caption: 'ios', size: '40px', sortable: true, resizable: true, attr: 'align=center' },	//세팅 해줘야함
                 { field: 'filename0', caption: '썸네일', size: '50px', sortable: true, resizable: true, style: 'padding: 0px;',	//세팅 해줘야함
                     render: function(record) {
                         if (record.filename0 != null && record.filename0 != '') {
@@ -196,6 +202,7 @@ block content
                 { field: 'title', type: 'text', required: true },	//세팅 해줘야함
                 { field: 'jaelyo', type: 'textarea', required: true },	//세팅 해줘야함
                 { field: 'writer_idx', type: 'list', required: true },	//세팅 해줘야함
+                { field: 'is_ios', type: 'int', required: true },	//세팅 해줘야함
                 { field: 'cate1', type: 'list', required: false },   //세팅 해줘야함
                 { field: 'cate2', type: 'list', required: false },	//세팅 해줘야함
                 { field: 'cate3', type: 'list', required: false },	//세팅 해줘야함
@@ -290,6 +297,9 @@ block content
         $(function () {
             $('#grid').w2grid(grid);
             $('#form').w2form(form);
+        
+            w2ui.form.record.is_ios = 1;
+            
             
             //카테고리 불러오기
             axios.get('/crud/iterator?table=CATEGORYS_tbl&sort1=sort1 ASC').then(function(res) {

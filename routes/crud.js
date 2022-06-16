@@ -132,8 +132,15 @@ router.post('/list',  async function(req, res, next) {
 });
 
 router.get('/iterator', userChecking, async function(req, res, next) {
-    var table = req.query.table;
-    var sql = "SELECT * FROM " + table + " ORDER BY idx DESC";
+    const table = req.query.table;
+    var sort1 = req.query.sort1;
+
+    if (!sort1) {
+        sort1 = 'idx DESC';
+    }
+
+    const sql = `SELECT * FROM ${table} ORDER BY ${sort1}`;
+    console.log(sql);
     db.query(sql, table, function(err, rows, fields) {
         res.send(rows);
     });
