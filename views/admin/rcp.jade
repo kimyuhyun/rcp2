@@ -63,7 +63,20 @@ block content
 
                     div(class='w-25 ms-4')
                         div(class='flex-column flex-fill h-100')
-                            textarea(id='jaelyo' name='jaelyo', rows='11', style='font-size: 14px; height: 270px;')
+                        
+                            div(class='btn-group bg-white w-100' style='font-size: 12px; height: 30px;')
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("T");') T
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("t");') t
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("개");') 개
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("장");') 장
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("컵");') 컵
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("대");') 대
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("주먹");') 주먹
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("꼬집");') 꼬집
+                                button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("적당량");') 적당량
+                                    
+                            textarea(id='jaelyo' name='jaelyo', style='font-size: 14px; height: 240px;')
+                            
                             button(name='check_jaelyo', class='w2ui-btn w2ui-btn-red w-100 m-0') 미리보기
                                 
                     div(class='ms-4')
@@ -72,7 +85,7 @@ block content
 
                 div(class='d-flex flex-wrap mt-3')
                     - var title = '';
-                    - for (var i=0;i<=20;i++)
+                    - for (var i = 0; i <= 20; i++)
                         if i == 0
                             - title = '대표사진';
                         else
@@ -96,19 +109,7 @@ block content
         input(type="hidden", name="jaelyo")
 
 
-    //- img(id='rcp_img', style='position: fixed; top:0px; left: 0px; z-index:9999; height: 300px; background: #fff; display: none;' onclick='$("#rcp_img").hide();')
-
-    div(id='jaelyo_helper' class='card shadow' style='position: absolute; z-index:9999; background: #fff; display: none; font-size: 10px;')
-        div(class='btn-group')
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("T");') T
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("t");') t
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("개");') 개
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("장");') 장
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("컵");') 컵
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("대");') 대
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("주먹");') 주먹
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("꼬집");') 꼬집
-            button(class='btn btn-outline-primary btn-sm' onclick='setJaelyoText("적당량");') 적당량
+    
 
 
     //- 들여쓰기 중요함
@@ -449,13 +450,13 @@ block content
                         $('#w2ui-popup #form').w2render('form');
                         
                         setTimeout(async function() {
-                            $('#jaelyo').mousedown(function(event) {
-                                if (event.which == 1) {
-                                    $("#jaelyo_helper").css("top", event.pageY);
-                                    $("#jaelyo_helper").css("left", event.pageX + 40);
-                                    $("#jaelyo_helper").show();
-                                }
-                            });
+                            //- $('#jaelyo').mousedown(function(event) {
+                            //-     if (event.which == 1) {
+                            //-         $("#jaelyo_helper").css("top", event.pageY);
+                            //-         $("#jaelyo_helper").css("left", event.pageX + 40);
+                            //-         $("#jaelyo_helper").show();
+                            //-     }
+                            //- });
                             
                             await getCategorys();
                             $("input[name='cate1']").w2field().set({ id: w2ui.form.record.cate1, text: w2ui.form.record.cate1 });
@@ -474,10 +475,10 @@ block content
                             eval("var fileLink = w2ui.form.record.filename"+i);
                             console.log('fileLink', fileLink);
                             if (fileLink) {
-                                var show_image = '$("#rcp_img").show();$("#rcp_img").attr("src", "'+fileLink+'");';
+                                var onclick = "showImage(this, '" + fileLink + "')";
                                 $("#filename"+i+"_img").attr("src", fileLink);
-                                $("#filename"+i+"_img").attr("onclick", show_image);
-                                $("#memo"+i).attr("onfocus", show_image);
+                                $("#filename"+i+"_img").attr("onclick", onclick);
+                                //- $("#memo"+i).attr("onfocus", show_image);
                                 $("#filename"+i+"_x").show();
                             } else {
                                 $("#filename"+i).val("");
@@ -493,10 +494,18 @@ block content
                 onClose: function() {
                     formClear();
                     $("#rcp_img").hide();
-                    $("#jaelyo_helper").hide();
+                    //- $("#jaelyo_helper").hide();
                 }
-            });
+            });                
+        }
+        
+        
+        function showImage(obj, fileLink) {
+            for (var i=0; i <= 20; i++) {
+                $("#filename"+i+"_img").css('border', '0px');
+            }
             
-            
-                
+            $(obj).css('border', 'solid 5px red');
+            $("#rcp_img").show();
+            $("#rcp_img").attr("src", fileLink);
         }
