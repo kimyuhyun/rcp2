@@ -1,0 +1,274 @@
+
+<form name="frm2" method="post" action="/crud/write?table=RCP_tbl" >
+    <input type="hidden" name="idx" value="<%=row.idx%>"/>
+    <input type="hidden" name="return_url" value="<%=return_url%>"/>
+    
+    <div class="row">
+        <div class="col-4">
+            <table class="table table-borderless table-sm table-form">
+                <tr>
+                    <th>제목</th>
+                    <td colspan="3"><input name='title' class='form-control' required value="<%=row.title%>"/></td>
+                </tr>
+                <tr>
+                    <th>블로거</th>
+                    <td class="pe-4">
+                        <select class="form-select" name="writer_idx" required>
+                            <option value="">::선택::</option>
+                            <% for (writer of writerList) { %>
+                            <option value="<%=writer.idx%>" <%=row.writer_idx == writer.idx ? 'selected' : '' %>><%=writer.name1%></option>
+                            <% } %>
+                        </select>
+                    </td>
+                    <th>종류별</th>
+                    <td>
+                        <select class="form-select" name="cate1" required>
+                            <option value="">::선택::</option>
+                            <% for (cate of cate1List) { %>
+                            <option value="<%=cate.name1%>" <%=row.cate1 == cate.name1 ? 'selected' : '' %>><%=cate.name1%></option>
+                            <% } %>
+                        </select>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <th>iOS</th>
+                    <td class="pe-4">
+                        <select class="form-select" name="is_ios">
+                            <option value="1" <%=row.is_ios == 1 ? 'selected' : '' %>>Y</option>
+                            <option value="0" <%=row.is_ios == 0 ? 'selected' : '' %>>N</option>
+                        </select>
+                    </td>
+                    <th>상황별</th>
+                    <td>
+                        <select class="form-select" name="cate2" required>
+                            <option value="">::선택::</option>
+                            <% for (cate of cate2List) { %>
+                            <option value="<%=cate.name1%>" <%=row.cate2 == cate.name1 ? 'selected' : '' %>><%=cate.name1%></option>
+                            <% } %>
+                        </select>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th>idx</th>
+                    <td><%=row.idx%></td>
+                    <th>재료별</th>
+                    <td>
+                        <select class="form-select" name="cate3" required>
+                            <option value="">::선택::</option>
+                            <% for (cate of cate3List) { %>
+                            <option value="<%=cate.name1%>" <%=row.cate3 == cate.name1 ? 'selected' : '' %>><%=cate.name1%></option>
+                            <% } %>
+                        </select>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th></th>
+                    <td></td>
+                    <th>방법별</th>
+                    <td>
+                        <select class="form-select" name="cate4" required>
+                            <option value="">::선택::</option>
+                            <% for (cate of cate4List) { %>
+                            <option value="<%=cate.name1%>" <%=row.cate4 == cate.name1 ? 'selected' : '' %>><%=cate.name1%></option>
+                            <% } %>
+                        </select>
+                    </td>
+                </tr>
+    
+                <tr>
+                    <th></th>
+                    <td></td>
+                    <th>테마별</th>
+                    <td>
+                        <select class="form-select" name="cate5" required>
+                            <option value="">::선택::</option>
+                            <% for (cate of cate5List) { %>
+                            <option value="<%=cate.name1%>" <%=row.cate5 == cate.name1 ? 'selected' : '' %>><%=cate.name1%></option>
+                            <% } %>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="col-4">
+            <div class="d-flex flex-column h-100">
+                <div class="flex-fill">
+                    <textarea name="jaelyo" class="h-100 form-control"><%=row.jaelyo%></textarea>
+                </div>
+                
+                <button type="button" onclick="jaelyoCheck()" class="btn btn-danger mt-1">체크</button>
+            </div>
+            
+        </div>
+
+        <div class="col-4">
+            <div class="d-flex flex-column" style="height: 300px;">
+                <img id="rcp_img" class="h-100"/>
+            </div>
+        </div>
+    </div>
+        
+    
+    <div class="d-flex flex-wrap">
+<% 
+    var size = "100px";
+    for (var i = 0; i <= 20; i++) {
+        var filename = '';
+        var memo = '';
+        if (row) {
+            filename = eval('row.filename' + i);
+            memo = eval('row.memo' + i);
+        }
+%>
+        <div class="d-flex flex-row mt-3 pe-1" style="width: 33.33%;">
+            <div style="position: relative; width: <%=size%>; height: <%=size%>;" ondragenter="dragEnter(<%=i%>, event)" ondragleave="dragLeave(<%=i%>, event)" ondragover="dragOver(event)" ondrop="drop(<%=i%>, event)">
+<%
+        if (filename) {
+%>
+                <label for="file-input<%=i%>">
+                    <img id="filename<%=i%>_IMG" src="<%=filename%>" class="img-thumbnail p-0" style="cursor: hand; width: <%=size%>; height: <%=size%>;" onclick="showImage(this, '<%=filename%>');"/>
+                </label>
+                <img id="filename<%=i%>_X" onclick="deleteImage(<%=i%>)" src="/images/photo_x.png" class="X" style="position: absolute; z-index:999; cursor: pointer; top: -10px; right: -9px;" width="25" height="25">
+                <input type="hidden" id="filename<%=i%>" name="filename<%=i%>" value="<%=filename%>" />
+<%
+        } else {
+%>                  
+                <label for="file-input<%=i%>">
+                    <img id="filename<%=i%>_IMG" src="/images/no-img2.png" class="img-thumbnail p-0" style="cursor: hand;  width: <%=size%>; height: <%=size%>;"/>
+                </label>
+                <img id="filename<%=i%>_X" onclick="deleteImage(<%=i%>)" src="/images/photo_x.png" class="X" style="position: absolute; cursor: pointer; top: -10px; right: -9px; display: none;" width="25" height="25">
+                <input type="hidden" id="filename<%=i%>" name="filename<%=i%>"/>
+<%
+        }
+%>
+            </div>
+            <div class="flex-fill">
+                <div class="form-floating h-100">
+                    <textarea name="memo<%=i%>" class="form-control h-100" placeholder="순서<%=i%>"><%=memo%></textarea>
+                    <label>순서<%=i%></label>
+                </div>
+                
+            </div>
+            
+        </div>
+<%
+    }
+%>
+    </div>
+           
+    <input type="submit" id="submit" style="display: none;"/>
+</form>
+
+
+<form name="frmPopup" method="post">
+    <input type="hidden" name="jaelyo" />
+</form>
+        
+
+<script>
+function dragEnter(i, e) {
+    console.log(i, "드래그 요소가 들어왔을떄", e);
+    $("#filename"+i+"_IMG").addClass("bg-dark");
+}
+function dragLeave(i, e) {
+    console.log(i, "드래그 요소가 나갔을때");
+    $("#filename"+i+"_IMG").addClass("img-thumbnail");
+    $("#filename"+i+"_IMG").removeClass("bg-dark");
+}
+function dragOver(e) {
+    // console.log("draging");
+    e.stopPropagation();
+    e.preventDefault();
+}
+
+function drop(i, e) {
+    console.log("드래그한 항목을 떨어뜨렸을때", e);
+    e.preventDefault();
+    var file = e.dataTransfer.files[0];
+
+    var formData = new FormData();
+    formData.append("upload_file", file, file.name);
+
+    $.ajax({
+        type: 'POST',
+        url: '<%=process.env.IMAGE_SERVER%>',
+        processData: false,
+        contentType: false,
+        data: formData,
+        dataType: "json",
+        success: function(res) {
+            console.dir(res);
+            $("#filename"+i).val(res.url);
+            $("#filename"+i+"_IMG").attr("src", res.url);
+            $("#filename"+i+"_IMG").attr("onclick", "showImage(this, '"+res.url+"')");
+            $("#filename"+i+"_X").show();
+        }, err: function(err) {
+            console.log(err);
+        }
+    });
+}
+
+function upload(obj, i) {
+    var formData = new FormData();
+	formData.append("upload_file", $(obj)[0].files[0], $(obj)[0].files[0].name);
+
+    $.ajax({
+        type: 'POST',
+        url: '<%=process.env.IMAGE_SERVER%>',
+        processData: false,
+        contentType: false,
+        data: formData,
+        dataType: "json",
+        success: function(res) {
+            console.dir(res);
+            $("#filename"+i).val(res.url);
+            $("#filename"+i+"_IMG").attr("src", res.url);
+            $("#filename"+i+"_IMG").attr("onclick", "showImage(this, '"+res.url+"')");
+            $("#filename"+i+"_X").show();
+        }, err: function(err) {
+            console.log(err);
+        }
+    });
+}
+
+
+function deleteImage(i) {
+    if (confirm("삭제하시겠습니까?")) {
+        var path = $("#filename"+i+"_IMG").attr("src");
+        $("#filename"+i).val("");
+        $("#filename"+i+"_IMG").attr("src", "/images/no-img2.png");
+        $("#filename"+i+"_IMG").attr("onclick", "");
+        $("#filename"+i+"_X").hide();
+    }
+}
+
+function showImage(obj, url) {
+    for (var i=0; i <= 20; i++) {
+        $("#filename" + i + "_IMG").css('border', '0px');
+    }
+    
+    $(obj).css('border', 'solid 5px red');
+    $("#rcp_img").show();
+    $("#rcp_img").attr("src", url);
+}
+
+
+function jaelyoCheck() {
+    var jaelyo = $("textarea[name='jaelyo']").val();
+
+    var frmPop = document.frmPopup;
+    var url = '/rcp/check_jaelyo';
+    window.open('', 'popupView', 'width=400, height=800, menubar=no, status=no, toolbar=no, left=0, top=0');
+    frmPop.action = url;
+    frmPop.target = 'popupView';
+    frmPop.jaelyo.value = jaelyo
+    frmPop.submit();
+}
+</script>
+
+
+

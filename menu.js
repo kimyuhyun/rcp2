@@ -1,16 +1,16 @@
-var menu = [{
+const menu = [{
         "title": "회원관리",
         "child": [{
                 "title": "권한 관리",
-                "link": "/admin/page/grade"
+                "link": "/adm/grade"
             },
             {
                 "title": "관리자 관리",
-                "link": "/admin/page/manager"
+                "link": "/adm/manager/1"
             },
             {
                 "title": "회원 관리",
-                "link": "/admin/page/user"
+                "link": "/adm/user/1"
             }
         ]
     },
@@ -19,11 +19,15 @@ var menu = [{
         "child": [
             {
                 "title": "공지사항",
-                "link": "/admin/page/notice"
+                "link": "/adm/board/notice/1"
             },
             {
                 "title": "고객센터",
-                "link": "/admin/page/cscenter"
+                "link": "/adm/board/cscenter/1"
+            },
+            {
+                "title": "신고",
+                "link": "/adm/board/singo/1"
             },
         ]
     },
@@ -32,15 +36,11 @@ var menu = [{
         "child": [
             {
                 "title": "레시피",
-                "link": "/admin/page/rcp"
-            },
-            {
-                "title": "레시피(빠른)",
-                "link": "/admin/page/rcp_fast"
+                "link": "/rcp/1"
             },
             {
                 "title": "블로거 등록",
-                "link": "/admin/page/bloger"
+                "link": "/rcp/bloger/1"
             },
         ]
     },
@@ -49,23 +49,23 @@ var menu = [{
         "child": [
             {
                 "title": "종류별",
-                "link": "/admin/category/cate1"
+                "link": "/rcp/category/cate1/1"
             },
             {
                 "title": "상황별",
-                "link": "/admin/category/cate2"
+                "link": "/rcp/category/cate2/1"
             },
             {
                 "title": "재료별",
-                "link": "/admin/category/cate3"
+                "link": "/rcp/category/cate3/1"
             },
             {
                 "title": "방법별",
-                "link": "/admin/category/cate4"
+                "link": "/rcp/category/cate4/1"
             },
             {
                 "title": "테마별",
-                "link": "/admin/category/cate5"
+                "link": "/rcp/category/cate5/1"
             },
         ]
     },

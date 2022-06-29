@@ -17,7 +17,7 @@ async function setLog(req, res, next) {
                 resolve(rows);
             }
         });
-    }).then(function(data){
+    }).then(function(data) {
         rows = data;
     });
 
@@ -39,7 +39,7 @@ async function setLog(req, res, next) {
 
     //현재 접속자 파일 생성
     var memo = new Date().getTime() + "|S|" + req.baseUrl + req.path;
-    fs.writeFile('./liveuser/'+ip, memo, function(err) {
+    fs.writeFile('./liveuser/' + ip, memo, function(err) {
         console.log(memo);
     });
     //
@@ -49,8 +49,8 @@ async function setLog(req, res, next) {
 router.get('/list', setLog, async function(req, res, next) {
     const board_id = req.query.board_id;
     const id = req.query.id;
-    var page = req.query.page;
 
+    var page = req.query.page;
     page = page * 20;
 
     var arr = [];
@@ -63,10 +63,19 @@ router.get('/list', setLog, async function(req, res, next) {
             A.board_id,
             A.id,
             A.title,
+            A.memo,
             A.name1,
             A.filename0,
+            A.filename1,
+            A.filename2,
+            A.filename3,
+            A.filename4,
+            A.filename5,
+            A.filename6,
+            A.filename7,
+            A.filename8,
+            A.filename9,
             A.created,
-            A.comment,
             (SELECT COUNT(*) FROM BOARD_tbl WHERE parent_idx = A.idx AND step = 2) as reply_cnt,
             (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx) as like1,
             (SELECT COUNT(*) FROM BOARD_SEE_tbl WHERE board_idx = A.idx) as see,
@@ -74,13 +83,15 @@ router.get('/list', setLog, async function(req, res, next) {
             FROM
             BOARD_tbl as A
             WHERE step = 1
+            AND is_use = 1
             AND board_id = ? `;
         if (id != '') {
             sql += ` AND id = ? `;
             arr.push(id);
         }
+
         sql += ` ORDER BY idx DESC `;
-        sql += ` LIMIT ` + page + `, 20 `;
+        sql += ` LIMIT ${page}, 20 `;
 
         db.query(sql, arr, function(err, rows, fields) {
             // console.log(rows);
@@ -158,7 +169,15 @@ router.get('/reply/:idx/:id/:is_like1_sort', setLog, async function(req, res, ne
     await new Promise(function(resolve, reject) {
         var sql = `
             SELECT
-            A.*,
+            A.idx,
+            A.parent_idx,
+            A.board_id,
+            A.id,
+            A.name1,
+            A.step,
+            A.memo,
+            A.filename0,
+            A.created,
             (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx) as like1_cnt,
             (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx AND id = ?) as is_like1,
             (SELECT COUNT(*) FROM BOARD_tbl WHERE parent_idx = A.idx AND step = 3) as reply_cnt,
@@ -181,7 +200,14 @@ router.get('/reply/:idx/:id/:is_like1_sort', setLog, async function(req, res, ne
             }
         });
     }).then(function(data) {
-        tmpArr = data;
+        var tmpRows = data;
+        var i = 0;
+        for (obj of tmpRows) {
+            i++;
+            obj.groups = i;
+
+            tmpArr.push(obj);
+        }
     });
 
     for (obj of tmpArr) {
@@ -190,7 +216,15 @@ router.get('/reply/:idx/:id/:is_like1_sort', setLog, async function(req, res, ne
         await new Promise(function(resolve, reject) {
             var sql = `
                 SELECT
-                A.*,
+                A.idx,
+                A.parent_idx,
+                A.board_id,
+                A.id,
+                A.name1,
+                A.step,
+                A.memo,
+                A.filename0,
+                A.created,
                 (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx) as like1_cnt,
                 (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx AND id = ?) as is_like1,
                 (SELECT filename0 FROM MEMB_tbl WHERE id = A.id) as user_thumb,
@@ -211,12 +245,12 @@ router.get('/reply/:idx/:id/:is_like1_sort', setLog, async function(req, res, ne
             });
         }).then(function(data) {
             for (obj2 of data) {
+                obj2.groups = obj.groups;
                 arr.push(obj2);
             }
         });
     }
-
-    res.send(arr);
+    res.send(utils.nvl(arr));
 });
 
 router.get('/re_reply/:idx/:id', setLog, async function(req, res, next) {
@@ -229,7 +263,15 @@ router.get('/re_reply/:idx/:id', setLog, async function(req, res, next) {
     await new Promise(function(resolve, reject) {
         var sql = `
             SELECT
-            A.*,
+            A.idx,
+            A.parent_idx,
+            A.board_id,
+            A.id,
+            A.name1,
+            A.step,
+            A.memo,
+            A.filename0,
+            A.created,
             (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx) as like1_cnt,
             (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx AND id = ?) as is_like1,
             (SELECT COUNT(*) FROM BOARD_tbl WHERE parent_idx = A.idx AND step = 3) as reply_cnt,
@@ -248,7 +290,13 @@ router.get('/re_reply/:idx/:id', setLog, async function(req, res, next) {
             }
         });
     }).then(function(data) {
-        tmpArr = data;
+        var tmpRows = data;
+        var i = 0;
+        for (obj of tmpRows) {
+            i++;
+            obj.groups = i;
+            tmpArr.push(obj);
+        }
     });
 
     for (obj of tmpArr) {
@@ -257,7 +305,15 @@ router.get('/re_reply/:idx/:id', setLog, async function(req, res, next) {
         await new Promise(function(resolve, reject) {
             var sql = `
                 SELECT
-                A.*,
+                A.idx,
+                A.parent_idx,
+                A.board_id,
+                A.id,
+                A.name1,
+                A.step,
+                A.memo,
+                A.filename0,
+                A.created,
                 (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx) as like1_cnt,
                 (SELECT COUNT(*) FROM BOARD_LIKE_tbl WHERE board_idx = A.idx AND id = ?) as is_like1,
                 (SELECT filename0 FROM MEMB_tbl WHERE id = A.id) as user_thumb,
@@ -278,6 +334,7 @@ router.get('/re_reply/:idx/:id', setLog, async function(req, res, next) {
             });
         }).then(function(data) {
             for (obj2 of data) {
+                obj2.groups = obj.groups;
                 arr.push(obj2);
             }
         });
@@ -344,10 +401,115 @@ router.get('/set_like1/:idx/:id', setLog, async function(req, res, next) {
     }).then(function(data) {
         arr.is_me = data.CNT;
     });
-
     res.send(arr);
 });
 
+router.post('/id_pass_confirm', setLog, async function(req, res, next) {
+    const { id, pass1, idx } = req.body;
+    var dbPass = '';
+    var inPass = '';
+
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT PASSWORD(?) as pass1 FROM dual`;
+        db.query(sql, pass1, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows[0]);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        dbPass = data.pass1;
+    });
+
+    await new Promise(function(resolve, reject) {
+        const sql = `SELECT pass1 FROM BOARD_tbl WHERE idx = ? AND id = ?`;
+        db.query(sql, [idx, id], function(err, rows, fields) {
+            if (!err) {
+                resolve(rows[0]);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        if (!data) {
+            inPass = null;
+        } else {
+            inPass = data.pass1;
+        }
+    });
+
+    if (dbPass == inPass) {
+        res.send({
+            cnt: 1,
+        });
+    } else {
+        res.send({
+            cnt: 0,
+        });
+    }
+
+
+});
+
+router.get('/set_aricle_push/:parent_idx', setLog, async function(req, res, next) {
+    var parent_idx = req.params.parent_idx;
+    var dest_id = '';
+    var writer = '';
+    var board_id = '';
+    var step = 0;
+    var tmp_idx = 0;
+
+    //항상 상위 댓글 작성자에게 푸시가 날라간다!
+
+    await new Promise(function(resolve, reject) {
+        var sql = `SELECT parent_idx, id, board_id, step FROM BOARD_tbl WHERE idx = ? `;
+        db.query(sql, parent_idx, function(err, rows, fields) {
+            if (!err) {
+                resolve(rows[0]);
+            } else {
+                console.log(err);
+            }
+        });
+    }).then(function(data) {
+        dest_id = data.id;
+
+        tmp_idx = data.parent_idx;
+        step = data.step;
+        writer = data.id;
+        board_id = data.board_id;
+    });
+
+    if (step == 2) {
+        //최 상위글을 찾는다!!!
+        parent_idx = tmp_idx;
+
+        console.log(parent_idx);
+
+        await new Promise(function(resolve, reject) {
+            var sql = `SELECT idx, id, board_id, step FROM BOARD_tbl WHERE idx = ? `;
+            db.query(sql, parent_idx, function(err, rows, fields) {
+                if (!err) {
+                    resolve(rows[0]);
+                } else {
+                    console.log(err);
+                }
+            });
+        }).then(function(data) {
+            tmp_idx = data.idx;
+            writer = data.id;
+        });
+    }
+
+    await new Promise(function(resolve, reject) {
+        var result = utils.sendArticlePush(dest_id, '등록하신 게시물에 댓글이 등록되었습니다.', parent_idx, writer, board_id);
+        resolve(result);
+    }).then(function(data) {
+        res.send({
+            data: data
+        });
+    });
+});
 
 router.get('/', setLog, async function(req, res, next) {
 
