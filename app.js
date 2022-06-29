@@ -23,7 +23,7 @@ const analyzerRouter = require('./routes/analyzer');
 const articleRouter = require('./routes/article');
 const apiRouter = require('./routes/api');
 const authRouter = require('./routes/auth');
-
+const jaelyoRouter = require('./routes/jaelyo');
 
 const app = express();
 
@@ -66,6 +66,8 @@ app.use('/analyzer', analyzerRouter);
 app.use('/article', articleRouter);
 app.use('/api', apiRouter);
 app.use('/auth', authRouter);
+app.use('/jaelyo', jaelyoRouter);
+
 
 
 // catch 404 and forward to error handler
