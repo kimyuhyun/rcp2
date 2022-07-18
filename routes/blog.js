@@ -16,7 +16,6 @@ async function tokenCheck(req, res, next) {
 
 router.get('/:page', tokenCheck, async function(req, res, next) {
     var page = req.params.page;
-
     if (!page) {
         page = 1;
     }
@@ -25,23 +24,23 @@ router.get('/:page', tokenCheck, async function(req, res, next) {
     await axios({
         method: 'get',
         headers: { 
-            'referer': 'https://m.blog.naver.com/SectionPostSearch.naver',
-            'user-agent': randomUseragent.getRandom(),
+            'Referer': 'https://section.blog.naver.com/ThemePost.naver?directoryNo=14&activeDirectorySeq=2&currentPage=1',
+            'User-agent': randomUseragent.getRandom(),
         },
-        url: `https://m.blog.naver.com/api/recommend/post?directory=RECIPE&itemCount=18&page=${page}&type=post`,
+        url: `https://section.blog.naver.com/ajax/DirectoryPostList.naver?directorySeq=20&pageNo=${page}`
     }).then(async function (res) {
-        json = res.data.result;
+        var str = res.data.replace(")]}',", '');
+        json = JSON.parse(str);
+        // json = json.result.postList;asd
     }).catch(function(e) {
         console.log(e);
-    });    
+    });
     res.send(json);
 });
 
 router.get('/search/:page/:keyword', tokenCheck, async function(req, res, next) {
-    
-
     var page = req.params.page;
-    const keyword = req.params.keyword;
+    const keyword = `${req.params.keyword} 레시피`;
 
     if (!page) {
         page = 1;
