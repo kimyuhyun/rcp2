@@ -9,7 +9,7 @@ const moment = require('moment');
 
 async function setLog(req, res, next) {
     //토큰 검증 한다!!!
-    if (req.query.token != 'kkyyhh') {
+    if (req.query.token != process.env.TOKEN) {
         res.send('Not Bad');
         return;
     }
@@ -73,7 +73,6 @@ router.get('/', setLog, async function(req, res, next) {
     res.send(arr);
 });
 
-// http://localhost:3001/jaelyo/get_rcp_result?token=kkyyhh&j0=감자&j1=간마늘&j2=고추장
 router.get('/get_rcp_result', setLog, async function(req, res, next) {
     const { j0, j1, j2 } = req.query;
     var resultArr = [];
