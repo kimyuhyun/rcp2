@@ -16,6 +16,7 @@ const db = require('./db');
 const indexRouter = require('./routes/index');
 const admRouter = require('./routes/adm');
 const rcpRouter = require('./routes/rcp');
+const blogRouter = require('./routes/blog');
 
 const crudRouter = require('./routes/crud');
 const apiCrudRouter = require('./routes/apiCrud');
@@ -60,6 +61,8 @@ app.use('/data', express.static('data'));
 app.use('/', indexRouter);
 app.use('/adm', admRouter);
 app.use('/rcp', rcpRouter);
+app.use('/blog', blogRouter);
+
 app.use('/crud', crudRouter);
 app.use('/api_crud', apiCrudRouter);
 app.use('/analyzer', analyzerRouter);
@@ -87,11 +90,11 @@ app.use(function(err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
     app.locals.hostname = process.env.HOST_NAME;
 
-    console.error(err.stack);
+    // console.error(err.stack);
     
     // render the error page
-    res.status(err.status || 500);
-    res.render('error');
+    // res.status(err.status || 500);
+    // res.render('error');
 });
 
 module.exports = app;

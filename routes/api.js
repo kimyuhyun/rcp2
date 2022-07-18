@@ -8,7 +8,7 @@ const moment = require('moment');
 
 async function setLog(req, res, next) {
     //토큰 검증 한다!!!
-    if (req.query.token != 'kkyyhh') {
+    if (req.query.token != process.env.TOKEN) {
         res.send('Not Bad');
         return;
     }
